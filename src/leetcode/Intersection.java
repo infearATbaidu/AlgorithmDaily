@@ -5,9 +5,9 @@ import java.util.*;
 /**
  * https://leetcode.com/problems/intersection-of-two-arrays/#/description
  *
- * Created by infear on 2017/6/11.
+ * @author infear
  */
-public class Solution {
+public class Intersection {
     public int[] intersection(int[] nums1, int[] nums2) {
         if (nums1 == null || nums2 == null) {
             return null;

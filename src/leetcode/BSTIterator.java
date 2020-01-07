@@ -4,8 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by infear on 2017/6/11.
  * https://leetcode.com/problems/binary-search-tree-iterator/#/description
+ *
+ * @author infear
  */
 public class BSTIterator {
     int cur = 0;
