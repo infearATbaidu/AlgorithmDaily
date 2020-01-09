@@ -3,6 +3,8 @@ package leetcode;
 import java.math.BigInteger;
 
 /**
+ * https://leetcode.com/problems/smallest-good-base/
+ *
  * @author Zhang Gang (zhanggang02@baidu.com)
  */
 public class SmallestGoodBase {
