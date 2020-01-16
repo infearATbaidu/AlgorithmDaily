@@ -1,6 +1,7 @@
 package leetcode;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * https://leetcode.com/problems/intersection-of-two-arrays/#/description

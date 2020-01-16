@@ -23,7 +23,7 @@ class Solution(object):
             idx = idx.next
             l = l + 1
         if k >= l:
-            return self.rotateRight(head,k%l)
+            return self.rotateRight(head, k % l)
         idx = head
         kk = l - k - 1
         while kk != 0:
