@@ -14,27 +14,27 @@ public class RestoreIPAddresses {
     }
 
     public List<String> restoreIpAddresses(String s) {
-        List<String> result = func(s, 0, s.length(), 4);
+        List<String> result = func(s, 0, 4);
         if (result == null) {
             result = new ArrayList<>();
         }
         return result;
     }
 
-    private List<String> func(String s, int start, int end, int k) {
+    private List<String> func(String s, int start, int k) {
         if (k == 0) {
-            if (start == end) {
+            if (start == s.length()) {
                 return new ArrayList<>();
             }
             return null;
         }
-        if (start >= end) {
+        if (start >= s.length()) {
             return null;
         }
         ArrayList<String> result = null;
         int step = 1;
         while (step <= 3) {
-            List<String> sub = func(s, start + step, end, k - 1);
+            List<String> sub = func(s, start + step, k - 1);
             if (sub == null) {
                 step++;
                 continue;
