@@ -1,4 +1,4 @@
-package _go
+package main
 
 // https://leetcode.com/problems/restore-ip-addresses/
 

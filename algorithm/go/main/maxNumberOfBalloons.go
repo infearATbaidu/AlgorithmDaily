@@ -1,4 +1,4 @@
-package _go
+package main
 
 func maxNumberOfBalloons(text string) int {
 	if len(text) == 0 {
