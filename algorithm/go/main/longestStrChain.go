@@ -77,8 +77,3 @@ func isPre(s1 string, s2 string) bool {
 	}
 	return true
 }
-
-func main() {
-	var input = []string{"ksqvsyq", "ks", "kss", "czvh", "zczpzvdhx", "zczpzvh", "zczpzvhx", "zcpzvh", "zczvh", "gr", "grukmj", "ksqvsq", "gruj", "kssq", "ksqsq", "grukkmj", "grukj", "zczpzfvdhx", "gru"}
-	longestStrChain(input)
-}
