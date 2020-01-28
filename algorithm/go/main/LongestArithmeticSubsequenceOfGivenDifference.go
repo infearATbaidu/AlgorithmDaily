@@ -36,8 +36,3 @@ func longestSubsequence(arr []int, difference int) int {
 	}
 	return curMax
 }
-
-func main() {
-	var arr = []int{1, 2, 3, 4}
-	longestSubsequence(arr, 1)
-}
