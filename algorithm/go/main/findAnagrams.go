@@ -53,7 +53,3 @@ func compareCnt(m1 map[uint8]int, m2 map[uint8]int) bool {
 	}
 	return true
 }
-
-func main() {
-	findAnagrams("cbaebabacd", "abc")
-}
