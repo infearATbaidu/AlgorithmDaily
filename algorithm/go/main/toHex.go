@@ -26,7 +26,3 @@ func toHex(num int) string {
 	result = m[num%16] + result
 	return result
 }
-
-func main() {
-	toHex(-1)
-}
