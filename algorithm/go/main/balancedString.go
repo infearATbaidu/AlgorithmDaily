@@ -59,7 +59,3 @@ func match(tmp map[uint8]int, target map[uint8]int) bool {
 	}
 	return true
 }
-
-func main() {
-	balancedString("WWEQERQWQWWRWWERQWEQ")
-}
