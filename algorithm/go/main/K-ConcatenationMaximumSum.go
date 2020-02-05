@@ -40,8 +40,3 @@ func kConcatenationMaxSum(arr []int, k int) int {
 	}
 	return int(max % 1000000007)
 }
-
-func main() {
-	var arr = []int{-5, -2, 0, 0, 3, 9, -2, -5, 4}
-	kConcatenationMaxSum(arr, 5)
-}
