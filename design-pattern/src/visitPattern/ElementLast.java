@@ -5,7 +5,7 @@ package visitPattern;
  */
 public class ElementLast extends Element {
     public ElementLast() {
-        super(null);
+        super(null, -1);
     }
 
     @Override

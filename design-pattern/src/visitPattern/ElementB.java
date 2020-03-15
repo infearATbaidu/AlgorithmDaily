@@ -4,8 +4,8 @@ package visitPattern;
  * @author infear
  */
 public class ElementB extends Element {
-    public ElementB(Element next) {
-        super(next);
+    public ElementB(Element next, int value) {
+        super(next, value);
     }
 
     @Override
