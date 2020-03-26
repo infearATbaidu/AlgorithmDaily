@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author infear
  */
-public class VisitorAPP {
+public class VisitorApp {
 
     public static void main(String args[]) {
         Element elementLast = new ElementLast();
