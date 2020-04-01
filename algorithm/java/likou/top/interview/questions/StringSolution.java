@@ -6,12 +6,20 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * @author infear
  */
 public class StringSolution {
+    public static void main(String args[]) {
+        List<String> words = new StringSolution().findWords(
+                new char[][] {{'a', 'b'}, {'a', 'a'}},
+                new String[] {"aba", "baa", "bab", "aaab", "aaa", "aaaa", "aaba"});
+        System.out.println(words);
+    }
+
     /* 验证回文串
      给定一个字符串，验证它是否是回文串，只考虑字母和数字字符，可以忽略字母的大小写。
 
@@ -327,5 +335,145 @@ public class StringSolution {
             return true;
         }
         return false;
+    }
+
+    public List<String> findWords2(char[][] board, String[] words) {
+        List<String> result = new LinkedList<>();
+        HashMap<Integer, Set<Coodinate>> pos = new HashMap();
+        for (String word : words) {
+            boolean isFind = false;
+            for (int i = 0; i != board.length; i++) {
+                for (int j = 0; j != board[0].length; j++) {
+                    if (find(word, 0, board, new Coodinate(i, j), new HashSet<>())) {
+                        result.add(word);
+                        isFind = true;
+                        break;
+                    }
+                }
+                if (isFind) {
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean find(String word, int i, char board[][], Coodinate c, HashSet path) {
+        if (i == word.length()) {
+            return true;
+        }
+        if (c.getX() < 0 || c.getX() >= board.length || c.getY() < 0 || c.getY() >= board[0].length) {
+            return false;
+        }
+        char start = word.charAt(i);
+        if (board[c.getX()][c.getY()] != start) {
+            return false;
+        }
+        path.add(c);
+        if (!path.contains(new Coodinate(c.getX(), c.getY() - 1))) {
+            boolean left = find(word, i + 1, board, new Coodinate(c.getX(), c.getY() - 1), path);
+            if (left) {
+                return true;
+            }
+        }
+
+        if (!path.contains(new Coodinate(c.getX() - 1, c.getY()))) {
+            boolean up = find(word, i + 1, board, new Coodinate(c.getX() - 1, c.getY()), path);
+            if (up) {
+                return true;
+            }
+        }
+
+        if (!path.contains(new Coodinate(c.getX(), c.getY() + 1))) {
+            boolean right = find(word, i + 1, board, new Coodinate(c.getX(), c.getY() + 1), path);
+            if (right) {
+                return true;
+            }
+        }
+
+        if (!path.contains(new Coodinate(c.getX() + 1, c.getY()))) {
+            boolean down = find(word, i + 1, board, new Coodinate(c.getX() + 1, c.getY()), path);
+            if (down) {
+                return true;
+            }
+        }
+        path.remove(c);
+        return false;
+    }
+
+    public List<String> findWords(char[][] board, String[] words) {
+        Set<String> result = new HashSet<>();
+        Trie root = new Trie();
+        for (String word : words) {
+            root.insert(word);
+        }
+        boolean path[][] = new boolean[board.length][board[0].length];
+        for (int i = 0; i != board.length; i++) {
+            for (int j = 0; j != board[0].length; j++) {
+                search(board, i, j, root, result, path);
+            }
+        }
+        return new LinkedList<>(result);
+    }
+
+    private void search(char[][] board, int i, int j, Trie root, Set<String> result, boolean[][] path) {
+        char c = board[i][j];
+        if (!root.startsWith(String.valueOf(c))) {
+            return;
+        }
+        path[i][j] = true;
+        Trie sub = root.getSourceByValue((int) c);
+        if (sub.hasEnd()) {
+            result.add(sub.getStr());
+        }
+        if (i + 1 < board.length && !path[i + 1][j]) {
+            search(board, i + 1, j, sub, result, path);
+        }
+        if (i - 1 >= 0 && !path[i - 1][j]) {
+            search(board, i - 1, j, sub, result, path);
+        }
+        if (j + 1 < board[0].length && !path[i][j + 1]) {
+            search(board, i, j + 1, sub, result, path);
+        }
+        if (j - 1 >= 0 && !path[i][j - 1]) {
+            search(board, i, j - 1, sub, result, path);
+        }
+        path[i][j] = false;
+    }
+
+    class Coodinate {
+        int x;
+        int y;
+
+        public Coodinate(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            Coodinate coodinate = (Coodinate) o;
+            return x == coodinate.x &&
+                    y == coodinate.y;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
+        }
     }
 }
