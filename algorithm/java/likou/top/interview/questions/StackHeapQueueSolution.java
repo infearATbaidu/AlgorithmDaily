@@ -1,6 +1,7 @@
 package likou.top.interview.questions;
 
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,7 +15,7 @@ import java.util.Stack;
  */
 public class StackHeapQueueSolution {
     public static void main(String args[]) {
-        System.out.println(new StackHeapQueueSolution().topKFrequent(new int[] {1, 1, 1, 2, 2, 3}, 2));
+        new StackHeapQueueSolution().maxSlidingWindow(new int[] {1, 3, -1, -3, 5, 3, 6, 7}, 3);
     }
 
     /*数组中的第K个最大元素
@@ -104,6 +105,34 @@ public class StackHeapQueueSolution {
         return 0;
     }
 
+    /* 逆波兰表达式求值
+     根据逆波兰表示法，求表达式的值。
+
+     有效的运算符包括 +, -, *, / 。每个运算对象可以是整数，也可以是另一个逆波兰表达式。
+
+     说明：
+
+     整数除法只保留整数部分。
+     给定逆波兰表达式总是有效的。换句话说，表达式总会得出有效数值且不存在除数为 0 的情况。
+     示例 1：
+
+     输入: ["2", "1", "+", "3", "*"]
+     输出: 9
+     解释: ((2 + 1) * 3) = 9*/
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> ele = new Stack();
+        Set<String> ops = new HashSet<>(Arrays.asList("+", "-", "*", "/"));
+        for (String token : tokens) {
+            if (!ops.contains(token)) {
+                ele.push(Integer.valueOf(token));
+            } else {
+                Integer i2 = ele.pop(), i1 = ele.pop();
+                ele.push(cal(token.charAt(0), i2, i1));
+            }
+        }
+        return ele.pop();
+    }
+
 /*    前 K 个高频元素
     给定一个非空的整数数组，返回其中出现频率前 k 高的元素。
 
@@ -150,5 +179,85 @@ public class StackHeapQueueSolution {
             t--;
         }
         return result;
+    }
+
+    /*    给定一个数组 nums，有一个大小为 k 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 k 个数字。滑动窗口每次只向右移动一位。
+        返回滑动窗口中的最大值。
+        进阶：
+        你能在线性时间复杂度内解决此题吗？
+        示例:
+
+        输入: nums = [1,3,-1,-3,5,3,6,7], 和 k = 3
+        输出: [3,3,5,5,6,7]
+        解释:
+
+        滑动窗口的位置                最大值
+    ---------------               -----
+            [1  3  -1] -3  5  3  6  7       3
+            1 [3  -1  -3] 5  3  6  7       3
+            1  3 [-1  -3  5] 3  6  7       5
+            1  3  -1 [-3  5  3] 6  7       5
+            1  3  -1  -3 [5  3  6] 7       6
+            1  3  -1  -3  5 [3  6  7]      7*/
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int[] result = new int[nums.length - k + 1];
+        int index = 0;
+        Deque<Integer> queue = new LinkedList();
+        for (int i = 0; i != nums.length; i++) {
+            if (!queue.isEmpty()) {
+                while (!queue.isEmpty() && i - queue.getFirst() >= k) {
+                    queue.removeFirst();
+                }
+                while (!queue.isEmpty() && nums[queue.getLast()] < nums[i]) {
+                    queue.removeLast();
+                }
+            }
+            queue.add(i);
+            if (i >= k - 1) {
+                result[index++] = nums[queue.getFirst()];
+            }
+        }
+        return result;
+    }
+
+    /*    设计一个支持 push，pop，top 操作，并能在常数时间内检索到最小元素的栈。
+
+        push(x) -- 将元素 x 推入栈中。
+        pop() -- 删除栈顶的元素。
+        top() -- 获取栈顶元素。
+        getMin() -- 检索栈中的最小元素。*/
+    class MinStack {
+        private Stack<Integer> ele;
+        private Stack<Integer> min;
+
+        /**
+         * initialize your data structure here.
+         */
+        public MinStack() {
+            ele = new Stack<>();
+            min = new Stack<>();
+        }
+
+        public void push(int x) {
+            ele.push(x);
+            if (min.size() != 0) {
+                min.push(Math.min(x, min.peek()));
+            } else {
+                min.push(x);
+            }
+        }
+
+        public void pop() {
+            ele.pop();
+            min.pop();
+        }
+
+        public int top() {
+            return ele.peek();
+        }
+
+        public int getMin() {
+            return min.peek();
+        }
     }
 }
