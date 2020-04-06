@@ -146,6 +146,24 @@ public class ListSolution {
         }
     }
 
+    public ListNode sortList(ListNode head) {
+        ListNode last = null;
+        ListNode cur = head;
+        while (cur != last) {
+            while (cur.next != last) {
+                if (cur.val > cur.next.val) {
+                    int tmp = cur.val;
+                    cur.val = cur.next.val;
+                    cur.next.val = tmp;
+                }
+                cur = cur.next;
+            }
+            last = cur;
+            cur = head;
+        }
+        return head;
+    }
+
     class ListNode {
         int val;
         ListNode next;
