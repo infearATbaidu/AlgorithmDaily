@@ -1,5 +1,8 @@
 package likou.top.interview.questions;
 
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -24,6 +27,44 @@ public class TreeSolution {
             return root;
         }
         return preOrder(root.right, count);
+    }
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        Map<TreeNode, TreeNode> ancestor = new HashMap<>();
+        traverse(root, ancestor);
+        LinkedHashSet<TreeNode> first = new LinkedHashSet(), second = new LinkedHashSet();
+        TreeNode cur = p;
+        first.add(cur);
+        while (ancestor.get(cur) != null) {
+            first.add(ancestor.get(cur));
+            cur = ancestor.get(cur);
+        }
+        cur = q;
+        second.add(cur);
+        while (ancestor.get(cur) != null) {
+            second.add(ancestor.get(cur));
+            cur = ancestor.get(cur);
+        }
+        for (TreeNode key : first) {
+            if (second.contains(key)) {
+                return key;
+            }
+        }
+        return root;
+    }
+
+    private void traverse(TreeNode root, Map<TreeNode, TreeNode> ancestor) {
+        if (root == null) {
+            return;
+        }
+        if (root.left != null) {
+            ancestor.put(root.left, root);
+            traverse(root.left, ancestor);
+        }
+        if (root.right != null) {
+            ancestor.put(root.right, root);
+            traverse(root.right, ancestor);
+        }
     }
 
     class TreeNode {
