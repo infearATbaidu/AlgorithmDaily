@@ -220,6 +220,64 @@ public class StackHeapQueueSolution {
         return result;
     }
 
+    public boolean guess(int[][] matrix, int g, int n, int k) {
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            int L = 0;
+            int R = n - 1;
+            int ans = 0;
+            while (L <= R) {
+                int mid = L + (R - L) / 2;
+                //若某一行值小于g，则应该是最后一个元素的下标 + 1.
+                if (matrix[i][mid] < g) {
+                    ans = mid + 1;
+                    L = mid + 1;
+                } else {
+                    R = mid - 1;
+                }
+            }
+            sum += ans;
+        }
+        return k > sum;
+    }
+
+    /*    有序矩阵中第K小的元素
+        给定一个 n x n 矩阵，其中每行和每列元素均按升序排序，找到矩阵中第k小的元素。
+        请注意，它是排序后的第 k 小元素，而不是第 k 个不同的元素。
+
+
+
+        示例:
+
+        matrix = [
+                [ 1,  5,  9],
+                [10, 11, 13],
+                [12, 13, 15]
+                ],
+        k = 8,
+
+        返回 13。
+
+
+        提示：
+        你可以假设 k 的值永远是有效的, 1 ≤ k ≤ n2 。*/
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length;
+        int L = matrix[0][0];
+        int R = matrix[n - 1][n - 1];
+        int ans = 0;
+        while (L <= R) {
+            int mid = L + (R - L) / 2;
+            if (guess(matrix, mid, n, k)) {
+                ans = mid;
+                L = mid + 1;
+            } else {
+                R = mid - 1;
+            }
+        }
+        return ans;
+    }
+
     /*    设计一个支持 push，pop，top 操作，并能在常数时间内检索到最小元素的栈。
 
         push(x) -- 将元素 x 推入栈中。

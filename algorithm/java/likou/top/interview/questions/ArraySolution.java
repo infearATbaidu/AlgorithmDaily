@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -231,5 +232,55 @@ public class ArraySolution {
             j++;
         }
         return false;
+    }
+
+/*    打乱数组
+    打乱一个没有重复元素的数组。
+
+    示例:
+
+    // 以数字集合 1, 2 和 3 初始化数组。
+    int[] nums = {1,2,3};
+    Solution solution = new Solution(nums);
+
+    // 打乱数组 [1,2,3] 并返回结果。任何 [1,2,3]的排列返回的概率应该相同。
+solution.shuffle();º
+
+    // 重设数组到它的初始状态[1,2,3]。
+solution.reset();
+
+    // 随机返回数组[1,2,3]打乱后的结果。
+solution.shuffle();*/
+
+    class Solution {
+        private int origin[];
+
+        public Solution(int[] nums) {
+            origin = nums;
+        }
+
+        /**
+         * Resets the array to its original configuration and return it.
+         */
+        public int[] reset() {
+            return origin;
+        }
+
+        /**
+         * Returns a random shuffling of the array.
+         */
+        public int[] shuffle() {
+            int[] copy = new int[origin.length];
+            for (int i = 0; i != origin.length; i++) {
+                copy[i] = origin[i];
+            }
+            for (int i = 0; i != copy.length; i++) {
+                int pos = new Random().nextInt(origin.length - i) + i;
+                int tmp = copy[pos];
+                copy[pos] = copy[i];
+                copy[i] = tmp;
+            }
+            return copy;
+        }
     }
 }
