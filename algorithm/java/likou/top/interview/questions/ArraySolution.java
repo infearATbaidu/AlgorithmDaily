@@ -34,6 +34,19 @@ public class ArraySolution {
         return result;
     }
 
+    public int maxProduct2(int[] nums) {
+        int max = 1;
+        int min = 1;
+        int result = Integer.MIN_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            int lastMax = max, lastMin = min;
+            max = Math.max(Math.max(lastMax * nums[i], nums[i]), lastMin * nums[i]);
+            min = Math.min(Math.min(lastMax * nums[i], nums[i]), lastMin * nums[i]);
+            result = Math.max(result, max);
+        }
+        return result;
+    }
+
     public boolean containsDuplicate(int[] nums) {
         Set<Integer> set = new HashSet<>();
         for (int i : nums) {
