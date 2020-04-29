@@ -93,6 +93,25 @@ public class ArraySolution {
         }
     }
 
+    public void moveZeroes2(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return;
+        }
+        // copy all the no-zero number to front position.
+        int i = 0, cur = 0;
+        while (i != nums.length) {
+            if (nums[i] == 0) {
+                i++;
+                continue;
+            }
+            nums[cur++] = nums[i++];
+        }
+        // fill the remainder position 'zero'.
+        while (cur != nums.length) {
+            nums[cur++] = 0;
+        }
+    }
+
     /* 两个数组的交集 II
      给定两个数组，编写一个函数来计算它们的交集。
 
