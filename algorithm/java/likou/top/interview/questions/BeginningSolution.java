@@ -136,6 +136,45 @@ public class BeginningSolution {
         }
     }
 
+    public void merge2(int[] nums1, int m, int[] nums2, int n) {
+        int i = 0, j = 0, end = m - 1;
+        while (i != m + n && j != n) {
+            // nums1 has meet end.
+            if (i > end) {
+                while (i != m + n) {
+                    nums1[i++] = nums2[j++];
+                }
+                break;
+            } else {
+                if (nums1[i] <= nums2[j]) {
+                    i++;
+                    continue;
+                } else {
+                    int k = j;
+                    while (k != n && nums2[k] <= nums1[i]) {
+                        k++;
+                    }
+                    // copy nums2[j:k] to nums1[i:]
+                    // first copy nums[i:] to nums[i+k-j:]
+                    int index = end;
+                    while (index >= i) {
+                        nums1[index + k - j] = nums1[index];
+                        index--;
+                    }
+                    end += k - j;
+                    index = 0;
+                    // copy nums2[j:k] to nums1[i:]
+                    while (index != k - j) {
+                        nums1[i + index] = nums2[j + index];
+                        index++;
+                    }
+                    j = k;
+                    i += k - j;
+                }
+            }
+        }
+    }
+
     /*你将获得 K 个鸡蛋，并可以使用一栋从 1 到 N  共有 N 层楼的建筑。
     每个蛋的功能都是一样的，如果一个蛋碎了，你就不能再把它掉下去。
     你知道存在楼层 F ，满足 0 <= F <= N 任何从高于 F 的楼层落下的鸡蛋都会碎，从 F 楼层或比它低的楼层落下的鸡蛋都不会破。
