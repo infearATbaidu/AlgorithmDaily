@@ -105,6 +105,7 @@ public class StringSolution {
         if (s == null || s.length() == 0) {
             return -1;
         }
+        // use linked hashmap to reserve order
         LinkedHashMap<Integer, Integer> map = new LinkedHashMap<>();
         Set<Integer> set = new HashSet<>();
         for (int i = 0; i != s.length(); i++) {

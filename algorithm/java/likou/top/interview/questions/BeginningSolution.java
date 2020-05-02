@@ -145,33 +145,32 @@ public class BeginningSolution {
                     nums1[i++] = nums2[j++];
                 }
                 break;
-            } else {
-                if (nums1[i] <= nums2[j]) {
-                    i++;
-                    continue;
-                } else {
-                    int k = j;
-                    while (k != n && nums2[k] <= nums1[i]) {
-                        k++;
-                    }
-                    // copy nums2[j:k] to nums1[i:]
-                    // first copy nums[i:] to nums[i+k-j:]
-                    int index = end;
-                    while (index >= i) {
-                        nums1[index + k - j] = nums1[index];
-                        index--;
-                    }
-                    end += k - j;
-                    index = 0;
-                    // copy nums2[j:k] to nums1[i:]
-                    while (index != k - j) {
-                        nums1[i + index] = nums2[j + index];
-                        index++;
-                    }
-                    j = k;
-                    i += k - j;
-                }
             }
+            // nums1 has remainder elements.
+            if (nums1[i] <= nums2[j]) {
+                i++;
+                continue;
+            }
+            int k = j;
+            while (k != n && nums2[k] <= nums1[i]) {
+                k++;
+            }
+            // copy nums2[j:k] to nums1[i:]
+            // first copy nums[i:] to nums[i+k-j:]
+            int index = end;
+            while (index >= i) {
+                nums1[index + k - j] = nums1[index];
+                index--;
+            }
+            end += k - j;
+            // copy nums2[j:k] to nums1[i:]
+            index = 0;
+            while (index != k - j) {
+                nums1[i + index] = nums2[j + index];
+                index++;
+            }
+            j = k;
+            i += k - j;
         }
     }
 

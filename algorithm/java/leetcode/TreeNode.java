@@ -9,7 +9,7 @@ import java.util.Set;
  * Created by infear on 2017/6/11.
  */
 public class TreeNode {
-    int val;
+    public int val;
     public TreeNode left;
     public TreeNode right;
 

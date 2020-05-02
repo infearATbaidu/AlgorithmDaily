@@ -10,6 +10,7 @@ public class Trie {
     public static final int END = '&';
     private Map<Integer, Trie> sources;
     private Integer value = -1;
+    // path from root
     private String str = "";
 
     public Trie getSourceByValue(Integer value) {

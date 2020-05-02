@@ -15,7 +15,7 @@ import java.util.Stack;
  */
 public class StackHeapQueueSolution {
     public static void main(String args[]) {
-        new StackHeapQueueSolution().maxSlidingWindow(new int[] {1, 3, -1, -3, 5, 3, 6, 7}, 3);
+        System.out.println(new StackHeapQueueSolution().findKthLargest2(new int[] {7, 7, 7, 7, 7, 7, 7}, 1));
     }
 
     /*数组中的第K个最大元素
@@ -35,6 +35,51 @@ public class StackHeapQueueSolution {
     public int findKthLargest(int[] nums, int k) {
         Arrays.sort(nums);
         return nums[nums.length - k];
+    }
+
+    public int findKthLargest2(int[] nums, int k) {
+        return findKthLargestRur(nums, 0, nums.length, k);
+    }
+
+    private int findKthLargestRur(int[] nums, int start, int end, int k) {
+        if (start == end - 1) {
+            return nums[start];
+        }
+        int target = nums[start];
+        int i = start + 1, j = end - 1;
+        while (true) {
+            while (i < end && nums[i] >= target) {
+                i++;
+            }
+            // the ele at start position is min, so break
+            if (i == end) {
+                break;
+            }
+            while (j > i && nums[j] <= target) {
+                j--;
+            }
+            if (i < j) {
+                swap(nums, i, j);
+            } else {
+                break;
+            }
+        }
+        // make the ele at start index to correct index.
+        swap(nums, i - 1, start);
+        if (i - start == k) {
+            return target;
+        }
+        if (k > i - start) {
+            return findKthLargestRur(nums, i, end, k - (i - start));
+        } else {
+            return findKthLargestRur(nums, start, i - 1, k);
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
     }
 
     /*    基本计算器 II
@@ -150,7 +195,9 @@ public class StackHeapQueueSolution {
     你的算法的时间复杂度必须优于 O(n log n) , n 是数组的大小。*/
 
     public List<Integer> topKFrequent(int[] nums, int k) {
+        // each number appear times.
         HashMap<Integer, Integer> counts = new HashMap<>();
+        // appear times map to number.
         HashMap<Integer, Set<Integer>> countsToNum = new HashMap<>();
         for (int num : nums) {
             counts.putIfAbsent(num, 0);
