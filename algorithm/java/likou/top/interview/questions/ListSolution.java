@@ -212,6 +212,71 @@ public class ListSolution {
         return head;
     }
 
+    /*    两数相加
+        给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。
+
+        如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。
+
+        您可以假设除了数字 0 之外，这两个数都不会以 0 开头。
+
+        示例：
+
+        输入：(2 -> 4 -> 3) + (5 -> 6 -> 4)
+        输出：7 -> 0 -> 8
+        原因：342 + 465 = 807*/
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode c1 = l1, c2 = l2;
+        ListNode head = new ListNode(-1, null);
+        ListNode c = head;
+        int flag = 0;
+        while (c1 != null || c2 != null || flag != 0) {
+            int v1 = c1 != null ? c1.val : 0;
+            int v2 = c2 != null ? c2.val : 0;
+            int v = v1 + v2 + flag;
+            if (v >= 10) {
+                v = v % 10;
+                flag = 1;
+            } else {
+                flag = 0;
+            }
+            c.next = new ListNode(v, null);
+            c = c.next;
+            if (c1 != null) {
+                c1 = c1.next;
+            }
+            if (c2 != null) {
+                c2 = c2.next;
+            }
+        }
+        return head.next;
+    }
+
+    /*    合并两个有序链表
+        将两个升序链表合并为一个新的升序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
+
+        示例：
+
+        输入：1->2->4, 1->3->4
+        输出：1->1->2->3->4->4*/
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode head = new ListNode(-1, null);
+        ListNode cur = head;
+        ListNode cur1 = l1, cur2 = l2;
+        while (cur1 != null || cur2 != null) {
+            int v1 = cur1 != null ? cur1.val : Integer.MAX_VALUE;
+            int v2 = cur2 != null ? cur2.val : Integer.MAX_VALUE;
+            if (v1 <= v2) {
+                cur.next = cur1;
+                cur1 = cur1.next;
+            } else {
+                cur.next = cur2;
+                cur2 = cur2.next;
+            }
+            cur = cur.next;
+        }
+        return head.next;
+    }
+
     class Node {
         int val;
         Node next;

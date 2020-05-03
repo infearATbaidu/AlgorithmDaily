@@ -1,5 +1,6 @@
 package likou.top.interview.questions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,10 +15,7 @@ import java.util.Set;
  */
 public class StringSolution {
     public static void main(String args[]) {
-        List<String> words = new StringSolution().findWords(
-                new char[][] {{'a', 'b'}, {'a', 'a'}},
-                new String[] {"aba", "baa", "bab", "aaab", "aaa", "aaaa", "aaba"});
-        System.out.println(words);
+        new StringSolution().lengthOfLongestSubstring("12312322");
     }
 
     /* 验证回文串
@@ -440,6 +438,191 @@ public class StringSolution {
             search(board, i, j - 1, sub, result, path);
         }
         path[i][j] = false;
+    }
+
+    /*    字母异位词分组
+        给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+
+        示例:
+
+        输入: ["eat", "tea", "tan", "ate", "nat", "bat"]
+        输出:
+                [
+                ["ate","eat","tea"],
+                ["nat","tan"],
+                ["bat"]
+                ]
+        说明：
+
+        所有输入均为小写字母。
+        不考虑答案输出的顺序。*/
+    public List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<String, List<String>> m = new HashMap<>();
+        for (String s : strs) {
+            char arr[] = s.toCharArray();
+            Arrays.sort(arr);
+            String sorted = new String(arr);
+            m.putIfAbsent(sorted, new LinkedList<>());
+            m.get(sorted).add(s);
+        }
+        List<List<String>> r = new LinkedList<>();
+        r.addAll(m.values());
+        return r;
+    }
+
+    /*    无重复字符的最长子串
+        给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+
+        示例 1:
+
+        输入: "abcabcbb"
+        输出: 3
+        解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+        示例 2:
+
+        输入: "bbbbb"
+        输出: 1
+        解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+        示例 3:
+
+        输入: "pwwkew"
+        输出: 3
+        解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+        请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。*/
+    public int lengthOfLongestSubstring(String s) {
+        if (s.length() == 0) {
+            return 0;
+        }
+        int max = 0, start = -1;
+        char[] array = s.toCharArray();
+        HashMap<Integer, Integer> charToPos = new HashMap<>();
+        for (int index = 0; index != array.length; index++) {
+            int key = array[index];
+            // key first appears or the last appear post is before start, which should be overwrite.
+            if (!charToPos.containsKey(key) || charToPos.get(key) <= start) {
+                charToPos.put(key, index);
+                max = Math.max(index - start, max);
+            } else {
+                int pos = charToPos.get(key);
+                // remove all pair before pos and recount from new start.
+                start = pos;
+                charToPos.put(key, index);
+            }
+        }
+        return max;
+    }
+
+    /*    三数之和
+        给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
+
+        注意：答案中不可以包含重复的三元组。
+
+
+
+        示例：
+
+        给定数组 nums = [-1, 0, 1, 2, -1, -4]，
+
+        满足要求的三元组集合为：
+                [
+                [-1, 0, 1],
+                [-1, -1, 2]
+                ]*/
+    public List<List<Integer>> threeSum(int[] nums) {
+        if (nums.length <= 2) {
+            return new ArrayList<>();
+        }
+        Arrays.sort(nums);
+        HashMap<Integer, Integer> pos = new HashMap<>();
+        // record each element last position(nearest to array end)
+        for (int i = 0; i != nums.length; i++) {
+            pos.put(nums[i], i);
+        }
+        List<List<Integer>> r = new ArrayList();
+        int lastFirst = nums[0] - 1, lastSecond = nums[0] - 1;
+        for (int i = 0; i != nums.length; i++) {
+            if (lastFirst == nums[i]) {
+                continue;
+            }
+            lastFirst = nums[i];
+            for (int j = i + 1; j != nums.length; j++) {
+                if (nums[j] == lastSecond) {
+                    continue;
+                }
+                lastSecond = nums[j];
+                int val = nums[i] + nums[j];
+                if (!pos.containsKey(-val) || pos.get(-val) <= j) {
+                    continue;
+                }
+                r.add(Arrays.asList(nums[i], nums[j], -val));
+            }
+        }
+        return r;
+    }
+
+/*    矩阵置零
+    给定一个 m x n 的矩阵，如果一个元素为 0，则将其所在行和列的所有元素都设为 0。请使用原地算法。
+
+    示例 1:
+
+    输入:
+            [
+            [1,1,1],
+            [1,0,1],
+            [1,1,1]
+            ]
+    输出:
+            [
+            [1,0,1],
+            [0,0,0],
+            [1,0,1]
+            ]
+    示例 2:
+
+    输入:
+            [
+            [0,1,2,0],
+            [3,4,5,2],
+            [1,3,1,5]
+            ]
+    输出:
+            [
+            [0,0,0,0],
+            [0,4,5,0],
+            [0,3,1,0]
+            ]
+    进阶:
+
+    一个直接的解决方案是使用  O(mn) 的额外空间，但这并不是一个好的解决方案。
+    一个简单的改进方案是使用 O(m + n) 的额外空间，但这仍然不是最好的解决方案。
+    你能想出一个常数空间的解决方案吗？*/
+
+    public void setZeroes(int[][] matrix) {
+        if (matrix.length == 0 || matrix[0].length == 0) {
+            return;
+        }
+        List<Integer> pos = new ArrayList<>();
+        for (int i = 0; i != matrix.length; i++) {
+            for (int j = 0; j != matrix[0].length; j++) {
+                if (matrix[i][j] == 0) {
+                    pos.add(i);
+                    pos.add(j);
+                }
+            }
+        }
+        int i = 0;
+        while (i != pos.size()) {
+            int row = pos.get(i);
+            i++;
+            int col = pos.get(i);
+            i++;
+            for (int j = 0; j != matrix[row].length; j++) {
+                matrix[row][j] = 0;
+            }
+            for (int j = 0; j != matrix.length; j++) {
+                matrix[j][col] = 0;
+            }
+        }
     }
 
     class Coodinate {
