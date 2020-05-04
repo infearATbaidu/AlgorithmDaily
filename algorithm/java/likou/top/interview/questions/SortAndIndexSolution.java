@@ -1,5 +1,6 @@
 package likou.top.interview.questions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
  */
 public class SortAndIndexSolution {
     public static void main(String args[]) {
-        new SortAndIndexSolution().wiggleSort(new int[] {1, 5, 1, 1, 6, 4});
+        new SortAndIndexSolution().search(new int[] {1, 3}, 3);
     }
 
     /*    最大数
@@ -201,5 +202,205 @@ public class SortAndIndexSolution {
             r.add(0, k - i - 1);
         }
         return r;
+    }
+
+    /*    颜色分类
+        给定一个包含红色、白色和蓝色，一共 n 个元素的数组，原地对它们进行排序，使得相同颜色的元素相邻，并按照红色、白色、蓝色顺序排列。
+    
+        此题中，我们使用整数 0、 1 和 2 分别表示红色、白色和蓝色。
+    
+        注意:
+        不能使用代码库中的排序函数来解决这道题。
+    
+        示例:
+    
+        输入: [2,0,2,1,1,0]
+        输出: [0,0,1,1,2,2]
+        进阶：
+    
+        一个直观的解决方案是使用计数排序的两趟扫描算法。
+        首先，迭代计算出0、1 和 2 元素的个数，然后按照0、1、2的排序，重写当前数组。
+        你能想出一个仅使用常数空间的一趟扫描算法吗？*/
+    public void sortColors(int[] nums) {
+        int i = 0;
+        while (i != nums.length) {
+            if (nums[i] == 0) {
+                i++;
+                continue;
+            }
+            // find first zero.
+            if (nums[i] == 1) {
+                int j = i;
+                while (j != nums.length && nums[j] != 0) {
+                    j++;
+                }
+                if (j != nums.length) {
+                    swap(nums, i, j);
+                } else {
+                    i++;
+                }
+                continue;
+            }
+            // find first 0 or 1
+            int j = i;
+            while (j != nums.length && nums[j] == 2) {
+                j++;
+            }
+            if (j != nums.length) {
+                swap(nums, i, j);
+            } else {
+                i++;
+            }
+        }
+    }
+
+    /*    在排序数组中查找元素的第一个和最后一个位置
+        给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+
+        你的算法时间复杂度必须是 O(log n) 级别。
+
+        如果数组中不存在目标值，返回 [-1, -1]。
+
+        示例 1:
+
+        输入: nums = [5,7,7,8,8,10], target = 8
+        输出: [3,4]
+        示例 2:
+
+        输入: nums = [5,7,7,8,8,10], target = 6
+        输出: [-1,-1]*/
+    public int[] searchRange(int[] nums, int target) {
+        int arr[] = new int[2];
+        int left = findLastSmaller(nums, 0, nums.length - 1, target);
+        if (left + 1 < nums.length && nums[left + 1] == target) {
+            // target exist
+            arr[0] = left + 1;
+        } else {
+            arr[0] = -1;
+        }
+        int right = findFirstLarger(nums, 0, nums.length - 1, target);
+        // target exist
+        if (right - 1 >= 0 && nums[right - 1] == target) {
+            arr[1] = right - 1;
+        } else {
+            arr[1] = -1;
+        }
+        return arr;
+    }
+
+    private int findFirstLarger(int[] nums, int start, int end, int target) {
+        int r = nums.length, i = start, j = end;
+        while (i <= j) {
+            int mid = i + (j - i) / 2;
+            if (nums[mid] <= target) {
+                i = mid + 1;
+            } else {
+                r = mid;
+                // mid is already candidate, try more smaller position
+                j = mid - 1;
+            }
+        }
+        return r;
+    }
+
+    private int findLastSmaller(int[] nums, int start, int end, int target) {
+        int r = -1, i = start, j = end;
+        while (i <= j) {
+            int mid = i + (j - i) / 2;
+            if (nums[mid] >= target) {
+                j = mid - 1;
+            } else {
+                r = mid;
+                // mid is already candidate, try more larger position
+                i = mid + 1;
+            }
+        }
+        return r;
+    }
+
+    /*    搜索旋转排序数组
+        假设按照升序排序的数组在预先未知的某个点上进行了旋转。
+
+                ( 例如，数组 [0,1,2,4,5,6,7] 可能变为 [4,5,6,7,0,1,2] )。
+
+        搜索一个给定的目标值，如果数组中存在这个目标值，则返回它的索引，否则返回 -1 。
+
+        你可以假设数组中不存在重复的元素。
+
+        你的算法时间复杂度必须是 O(log n) 级别。
+
+        示例 1:
+
+        输入: nums = [4,5,6,7,0,1,2], target = 0
+        输出: 4
+        示例 2:
+
+        输入: nums = [4,5,6,7,0,1,2], target = 3
+        输出: -1*/
+    public int search(int[] nums, int target) {
+        int start = 0, end = nums.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            }
+            if (nums[mid] > nums[end]) {
+                if (target > nums[mid] || target < nums[start]) {
+                    start = mid + 1;
+                } else {
+                    end = mid - 1;
+                }
+            } else {
+                if (target < nums[mid] || target > nums[end]) {
+                    end = mid - 1;
+                } else {
+                    start = mid + 1;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /*    合并区间
+        给出一个区间的集合，请合并所有重叠的区间。
+
+        示例 1:
+
+        输入: [[1,3],[2,6],[8,10],[15,18]]
+        输出: [[1,6],[8,10],[15,18]]
+        解释: 区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
+        示例 2:
+
+        输入: [[1,4],[4,5]]
+        输出: [[1,5]]
+        解释: 区间 [1,4] 和 [4,5] 可被视为重叠区间。*/
+    public int[][] merge(int[][] intervals) {
+        if (intervals.length == 0) {
+            return new int[0][0];
+        }
+        Arrays.sort(intervals, (o1, o2) -> {
+            if (o1[0] < o2[0] || (o1[0] == o2[0] && o1[1] < o2[1])) {
+                return -1;
+            }
+            if (o1[0] == o2[0] && o1[1] == o2[1]) {
+                return 0;
+            }
+            return 1;
+        });
+        List<int[]> r = new ArrayList<>();
+        int[] last = intervals[0];
+        for (int i = 1; i != intervals.length; i++) {
+            // try merge last and intervals[i]
+            int[] cur = intervals[i];
+            if (cur[0] > last[1]) {
+                r.add(last);
+                last = cur;
+            } else {
+                last[1] = Math.max(cur[1], last[1]);
+            }
+        }
+        // last one
+        r.add(last);
+        return r.toArray(new int[0][0]);
     }
 }
