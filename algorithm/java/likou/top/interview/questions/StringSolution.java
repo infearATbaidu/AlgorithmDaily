@@ -42,21 +42,19 @@ public class StringSolution {
                 i++;
             }
             if (i == s.length()) {
-                return true;
+                break;
             }
-            while (j != -1 && !Character.isAlphabetic(s.charAt(j)) && !Character.isDigit(s.charAt(j))) {
+            while (j > i && !Character.isAlphabetic(s.charAt(j)) && !Character.isDigit(s.charAt(j))) {
                 j--;
             }
-            if (j == -1) {
-                return true;
+            if (j <= i) {
+                break;
             }
-            if (i < j) {
-                if (s.charAt(i) == s.charAt(j)) {
-                    i++;
-                    j--;
-                } else {
-                    return false;
-                }
+            if (s.charAt(i) == s.charAt(j)) {
+                i++;
+                j--;
+            } else {
+                return false;
             }
         }
         return true;
