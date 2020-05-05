@@ -144,29 +144,22 @@ public class BeginningSolution {
                 }
                 break;
             }
-            // nums1 has remainder elements.
+            // nums1 has remainder elements. find first nums1[i] > nums2[j]
             if (nums1[i] <= nums2[j]) {
                 i++;
                 continue;
             }
+            // find last nums2[k] <= nums1[i]
             int k = j;
             while (k != n && nums2[k] <= nums1[i]) {
                 k++;
             }
-            // copy nums2[j:k] to nums1[i:]
-            // first copy nums[i:] to nums[i+k-j:]
-            int index = end;
-            while (index >= i) {
-                nums1[index + k - j] = nums1[index];
-                index--;
-            }
+            // copy nums2[j:k) to nums1[i:)
+            // first copy nums1[i:] to nums1[i+k-j:]
+            System.arraycopy(nums1, i, nums1, i + k - j, end - i + 1);
+            // copy nums2[j:k) to nums1[i:]
+            System.arraycopy(nums2, j, nums1, i, k - j);
             end += k - j;
-            // copy nums2[j:k] to nums1[i:]
-            index = 0;
-            while (index != k - j) {
-                nums1[i + index] = nums2[j + index];
-                index++;
-            }
             j = k;
             i += k - j;
         }
