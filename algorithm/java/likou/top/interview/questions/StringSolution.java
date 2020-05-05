@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class StringSolution {
     public static void main(String args[]) {
-        new StringSolution().lengthOfLongestSubstring("12312322");
+        new StringSolution().multiply("0", "59");
     }
 
     /* 验证回文串
@@ -745,6 +745,69 @@ public class StringSolution {
         return false;
     }
 
+    /*    字符串相乘
+        给定两个以字符串形式表示的非负整数 num1 和 num2，返回 num1 和 num2 的乘积，它们的乘积也表示为字符串形式。
+
+        示例 1:
+
+        输入: num1 = "2", num2 = "3"
+        输出: "6"
+        示例 2:
+
+        输入: num1 = "123", num2 = "456"
+        输出: "56088"
+        说明：
+
+        num1 和 num2 的长度小于110。
+        num1 和 num2 只包含数字 0-9。
+        num1 和 num2 均不以零开头，除非是数字 0 本身。
+        不能使用任何标准库的大数类型（比如 BigInteger）或直接将输入转换为整数来处理。*/
+    public String multiply(String num1, String num2) {
+        StringBuilder r = new StringBuilder("0");
+        if (num1.equals("0") || num2.equals("0")) {
+            return r.toString();
+        }
+        int base = 0;
+        while (base != num2.length()) {
+            int ele = num2.charAt(num2.length() - 1 - base) - '0';
+            //calculate num1 * ele
+            StringBuilder sb = new StringBuilder();
+            // if ele = 0, no need to cal and just fill 0
+
+            int k = num1.length() - 1, flag = 0;
+            while (k != -1) {
+                int val = (num1.charAt(k) - '0') * ele + flag;
+                flag = val / 10;
+                sb.insert(0, val % 10);
+                k--;
+            }
+            if (flag != 0) {
+                sb.insert(0, flag);
+            }
+            // fill 0 at end;
+            int zero = 0;
+            while (zero++ != base) {
+                sb.append(0);
+            }
+            // add sb and r
+            StringBuilder tmp = new StringBuilder();
+            int c1 = sb.length() - 1, c2 = r.length() - 1;
+            flag = 0;
+            while (c1 > -1 || c2 > -1 || flag != 0) {
+                int v1 = c1 > -1 ? sb.charAt(c1) - '0' : 0;
+                int v2 = c2 > -1 ? r.charAt(c2) - '0' : 0;
+                int v = v1 + v2 + flag;
+                tmp.insert(0, v % 10);
+                flag = v / 10;
+                c1--;
+                c2--;
+            }
+            r = tmp;
+            base++;
+        }
+        return r.toString();
+    }
+
     class Coodinate {
         int x;
         int y;
@@ -780,5 +843,4 @@ public class StringSolution {
             return Objects.hash(x, y);
         }
     }
-
 }
