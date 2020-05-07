@@ -194,7 +194,7 @@ public class StackHeapQueueSolution {
     你可以假设给定的 k 总是合理的，且 1 ≤ k ≤ 数组中不相同的元素的个数。
     你的算法的时间复杂度必须优于 O(n log n) , n 是数组的大小。*/
 
-    public List<Integer> topKFrequent(int[] nums, int k) {
+    public int[] topKFrequent(int[] nums, int k) {
         // each number appear times.
         HashMap<Integer, Integer> counts = new HashMap<>();
         // appear times map to number.
@@ -225,7 +225,7 @@ public class StackHeapQueueSolution {
             }
             t--;
         }
-        return result;
+        return result.stream().mapToInt(Integer::intValue).toArray();
     }
 
     /*    给定一个数组 nums，有一个大小为 k 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 k 个数字。滑动窗口每次只向右移动一位。
