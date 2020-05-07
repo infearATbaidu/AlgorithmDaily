@@ -274,25 +274,15 @@ public class ArraySolution {
         if (nums.length < 3) {
             return false;
         }
-        int i = 0;
-        while (i + 1 < nums.length && nums[i] >= nums[i + 1]) {
-            i++;
-        }
-        if (i == nums.length - 1) {
-            return false;
-        }
-        int low = nums[i], mid = nums[i + 1];
-        int j = i + 2;
-        if (j >= nums.length) {
-            return false;
-        }
+        int mid = Integer.MAX_VALUE, low = nums[0];
+        int j = 1;
         while (j != nums.length) {
             if (nums[j] > mid) {
                 return true;
             }
-            if (nums[j] < mid && nums[j] > low) {
+            if (nums[j] <= mid && nums[j] > low) {
                 mid = nums[j];
-            } else if (nums[j] < low) {
+            } else if (nums[j] <= low) {
                 low = nums[j];
             }
             j++;
