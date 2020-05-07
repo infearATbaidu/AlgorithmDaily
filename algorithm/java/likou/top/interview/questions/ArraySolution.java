@@ -337,9 +337,7 @@ solution.shuffle();*/
          */
         public int[] shuffle() {
             int[] copy = new int[origin.length];
-            for (int i = 0; i != origin.length; i++) {
-                copy[i] = origin[i];
-            }
+            System.arraycopy(origin, 0, copy, 0, origin.length);
             for (int i = 0; i != copy.length; i++) {
                 int pos = new Random().nextInt(origin.length - i) + i;
                 int tmp = copy[pos];

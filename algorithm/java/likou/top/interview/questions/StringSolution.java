@@ -103,6 +103,7 @@ public class StringSolution {
         }
         // use linked hashmap to reserve order
         LinkedHashMap<Integer, Integer> map = new LinkedHashMap<>();
+        // reserve all duplicated char
         Set<Integer> set = new HashSet<>();
         for (int i = 0; i != s.length(); i++) {
             char c = s.charAt(i);
@@ -209,6 +210,26 @@ public class StringSolution {
             }
         }
         return isMatch[0];
+    }
+
+    public boolean wordBreak_(String s, List<String> wordDict) {
+        Set<String> dict = new HashSet<>(wordDict);
+        return wordBreakRecur(s, dict);
+    }
+
+    private boolean wordBreakRecur(String s, Set<String> dict) {
+        if (s.length() == 0) {
+            return true;
+        }
+        for (int i = 1; i <= s.length(); i++) {
+            if (!dict.contains(s.substring(0, i))) {
+                continue;
+            }
+            if (wordBreakRecur(s.substring(i), dict)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /*单词拆分 II
