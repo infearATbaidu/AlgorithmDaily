@@ -7,8 +7,8 @@ import java.util.HashMap;
  */
 public class ListSolution {
     public static void main(String args[]) {
-        ListNode n1 = new ListNode(1, new ListNode(2, new ListNode(3, null)));
-        new ListSolution().oddEvenList(n1);
+        ListNode n1 = new ListNode(4, new ListNode(2, new ListNode(1, null)));
+        new ListSolution().sortList2(n1);
     }
 
     public ListNode reverseList(ListNode head) {
@@ -163,6 +163,48 @@ public class ListSolution {
             cur = head;
         }
         return head;
+    }
+
+    public ListNode sortList2(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode mid = findMiddle(head);
+        ListNode tmp = mid.next;
+        mid.next = null;
+        ListNode newHead1 = sortList2(head), newHead2 = sortList2(tmp);
+        return merge(newHead1, newHead2);
+    }
+
+    private ListNode merge(ListNode newHead1, ListNode newHead2) {
+        ListNode c1 = newHead1, c2 = newHead2, head = new ListNode(-1, null), c = head;
+        while (c1 != null || c2 != null) {
+            if (c1 == null) {
+                c.next = c2;
+                c2 = c2.next;
+            } else {
+                if (c2 == null || c1.val < c2.val) {
+                    c.next = c1;
+                    c1 = c1.next;
+                } else {
+                    c.next = c2;
+                    c2 = c2.next;
+                }
+            }
+            c = c.next;
+        }
+        return head.next;
+    }
+
+    private ListNode findMiddle(ListNode head) {
+        ListNode slow = head, fast = head;
+        while (true) {
+            if (fast.next == null || fast.next.next == null) {
+                return slow;
+            }
+            fast = fast.next.next;
+            slow = slow.next;
+        }
     }
 
     /*    奇偶链表
