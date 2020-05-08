@@ -140,11 +140,7 @@ public class ListSolution {
             } else {
                 return false;
             }
-            if (slow != null) {
-                slow = slow.next;
-            } else {
-                return false;
-            }
+            slow = slow.next;
             if (slow == fast) {
                 return true;
             }
