@@ -252,7 +252,7 @@ public class StackHeapQueueSolution {
         Deque<Integer> queue = new LinkedList();
         for (int i = 0; i != nums.length; i++) {
             if (!queue.isEmpty()) {
-                while (!queue.isEmpty() && i - queue.getFirst() >= k) {
+                if (!queue.isEmpty() && i - queue.getFirst() >= k) {
                     queue.removeFirst();
                 }
                 while (!queue.isEmpty() && nums[queue.getLast()] < nums[i]) {
