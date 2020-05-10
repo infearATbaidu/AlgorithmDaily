@@ -315,6 +315,33 @@ public class ListSolution {
         return head.next;
     }
 
+    /*    合并K个排序链表
+        合并 k 个排序链表，返回合并后的排序链表。请分析和描述算法的复杂度。
+
+        示例:
+
+        输入:
+                [
+                1->4->5,
+                1->3->4,
+                2->6
+                ]
+        输出: 1->1->2->3->4->4->5->6*/
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0) {
+            return null;
+        }
+        int end = lists.length, cur = 0;
+        while (end != 1) {
+            for (int index = 0; index < end; index += 2) {
+                lists[cur++] = mergeTwoLists(lists[index], index + 1 >= end ? null : lists[index + 1]);
+            }
+            end = cur;
+            cur = 0;
+        }
+        return lists[0];
+    }
+
     class Node {
         int val;
         Node next;
