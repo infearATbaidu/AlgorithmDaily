@@ -11,6 +11,10 @@ import java.util.Set;
  * @author infear
  */
 public class ArraySolution {
+    public static void main(String args[]) {
+        System.out.println(new ArraySolution().getPermutation(4, 9));
+    }
+
     /*给你一个整数数组 nums ，请你找出数组中乘积最大的连续子数组（该子数组中至少包含一个数字）。
     示例 1:
     输入: [2,3,-2,4]
@@ -244,17 +248,6 @@ public class ArraySolution {
         swap(nums, k, nums.length);
     }
 
-    private void swap(int[] nums, int start, int end) {
-        int i = start, j = end - 1;
-        while (i < j) {
-            int tmp = nums[i];
-            nums[i] = nums[j];
-            nums[j] = tmp;
-            i++;
-            j--;
-        }
-    }
-
 /*    给定一个未排序的数组，判断这个数组中是否存在长度为 3 的递增子序列。
     数学表达式如下:
     如果存在这样的 i, j, k,  且满足 0 ≤ i < j < k ≤ n-1，
@@ -269,6 +262,35 @@ public class ArraySolution {
 
     输入: [5,4,3,2,1]
     输出: false*/
+
+    private void swap(int[] nums, int start, int end) {
+        int i = start, j = end - 1;
+        while (i < j) {
+            int tmp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = tmp;
+            i++;
+            j--;
+        }
+    }
+
+/*    打乱数组
+    打乱一个没有重复元素的数组。
+
+    示例:
+
+    // 以数字集合 1, 2 和 3 初始化数组。
+    int[] nums = {1,2,3};
+    Solution solution = new Solution(nums);
+
+    // 打乱数组 [1,2,3] 并返回结果。任何 [1,2,3]的排列返回的概率应该相同。
+solution.shuffle();º
+
+    // 重设数组到它的初始状态[1,2,3]。
+solution.reset();
+
+    // 随机返回数组[1,2,3]打乱后的结果。
+solution.shuffle();*/
 
     public boolean increasingTriplet(int[] nums) {
         if (nums.length < 3) {
@@ -290,23 +312,68 @@ public class ArraySolution {
         return false;
     }
 
-/*    打乱数组
-    打乱一个没有重复元素的数组。
+    /*    第k个排列
+        给出集合 [1,2,3,…,n]，其所有元素共有 n! 种排列。
 
-    示例:
+        按大小顺序列出所有排列情况，并一一标记，当 n = 3 时, 所有排列如下：
 
-    // 以数字集合 1, 2 和 3 初始化数组。
-    int[] nums = {1,2,3};
-    Solution solution = new Solution(nums);
+                "123"
+                "132"
+                "213"
+                "231"
+                "312"
+                "321"
+        给定 n 和 k，返回第 k 个排列。
 
-    // 打乱数组 [1,2,3] 并返回结果。任何 [1,2,3]的排列返回的概率应该相同。
-solution.shuffle();º
+        说明：
 
-    // 重设数组到它的初始状态[1,2,3]。
-solution.reset();
+        给定 n 的范围是 [1, 9]。
+        给定 k 的范围是[1,  n!]。
+        示例 1:
 
-    // 随机返回数组[1,2,3]打乱后的结果。
-solution.shuffle();*/
+        输入: n = 3, k = 3
+        输出: "213"*/
+    public String getPermutation(int n, int k) {
+        // calculate factorial.
+        int factorial[] = new int[n + 1];
+        factorial[0] = 1;
+        for (int index = 1; index != n + 1; index++) {
+            factorial[index] = factorial[index - 1] * index;
+        }
+        StringBuilder sb = new StringBuilder();
+        int used[] = new int[n + 1];
+        int start = n, index;
+        while (k != 0) {
+            // calculate [n-start] position of result.
+            start--;
+            int r = k / factorial[start], remainder = k % factorial[start];
+            if (remainder != 0) {
+                r++;
+            }
+            index = 1;
+            while (true) {
+                if (used[index] == 0) {
+                    r--;
+                }
+                if (r == 0) {
+                    break;
+                }
+                index++;
+            }
+            used[index] = 1;
+            sb.append(index);
+            k = remainder;
+        }
+        index = n;
+        // use remainder element from last to first.
+        while (index != 0) {
+            if (used[index] == 0) {
+                sb.append(index);
+            }
+            index--;
+        }
+        return sb.toString();
+    }
 
     class Solution {
         private int origin[];
