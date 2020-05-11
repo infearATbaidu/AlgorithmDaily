@@ -7,8 +7,8 @@ import java.util.HashMap;
  */
 public class ListSolution {
     public static void main(String args[]) {
-        ListNode n1 = new ListNode(4, new ListNode(2, new ListNode(1, null)));
-        new ListSolution().sortList2(n1);
+        ListNode n1 = new ListNode(0, new ListNode(0, null));
+        new ListSolution().isPalindrome2(n1);
     }
 
     public ListNode reverseList(ListNode head) {
@@ -51,6 +51,34 @@ public class ListSolution {
         return true;
     }
 
+    public boolean isPalindrome2(ListNode head) {
+        if (head == null) {
+            return true;
+        }
+        ListNode slow = head, fast = slow;
+        while (true) {
+            if (fast.next == null || fast.next.next == null) {
+                break;
+            }
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        boolean isOdd = fast.next == null;
+        ListNode midHead = slow.next;
+        slow.next = null;
+        ListNode newHead = reverseList(head);
+        // list length is odd.
+        if (isOdd) {
+            newHead = newHead.next;
+        }
+        ListNode cur1 = newHead, cur2 = midHead;
+        while (cur1 != null && cur2 != null && cur1.val == cur2.val) {
+            cur1 = cur1.next;
+            cur2 = cur2.next;
+        }
+        return cur1 == null && cur2 == null;
+    }
+
     public Node copyRandomList(Node head) {
         if (head == null) {
             return null;
@@ -78,46 +106,42 @@ public class ListSolution {
     }
 
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        ListNode cur = headA;
-        int lengthA = 0;
-        while (cur != null) {
-            cur = cur.next;
-            lengthA++;
-        }
-        cur = headB;
-        int lengthB = 0;
-        while (cur != null) {
-            cur = cur.next;
-            lengthB++;
-        }
-        ListNode cur1, cur2;
-        if (lengthA >= lengthB) {
-            cur = headA;
-            int gap = lengthA - lengthB;
-            while (gap != 0) {
-                cur = cur.next;
-                gap--;
-            }
-            cur1 = cur;
-            cur2 = headB;
-        } else {
-            cur = headB;
-            int gap = lengthB - lengthA;
-            while (gap != 0) {
-                cur = cur.next;
-                gap--;
-            }
-            cur1 = headA;
-            cur2 = cur;
-        }
-        while (cur1 != null && cur2 != null && cur1 != cur2) {
-            cur1 = cur1.next;
-            cur2 = cur2.next;
-        }
-        if (cur1 == null) {
+        ListNode curA = headA, curB = headB;
+        if (curA == null || curB == null) {
             return null;
         }
-        return cur1;
+        int lengthA = 0, lengthB = 0;
+        while (curA.next != null || curB.next != null) {
+            if (curA.next != null) {
+                curA = curA.next;
+                lengthA++;
+            }
+            if (curB.next != null) {
+                curB = curB.next;
+                lengthB++;
+            }
+        }
+        if (curA != curB) {
+            return null;
+        }
+        curA = headA;
+        curB = headB;
+        int gap = lengthA - lengthB;
+        if (gap > 0) {
+            while (gap-- != 0) {
+                curA = curA.next;
+            }
+        } else {
+            gap = -gap;
+            while (gap-- != 0) {
+                curB = curB.next;
+            }
+        }
+        while (curA != curB) {
+            curA = curA.next;
+            curB = curB.next;
+        }
+        return curA;
     }
 
     public void deleteNode(ListNode node) {
@@ -165,6 +189,7 @@ public class ListSolution {
         return head;
     }
 
+    // use merge sort to reimplement sortList, which would optimize performance.
     public ListNode sortList2(ListNode head) {
         if (head == null || head.next == null) {
             return head;
