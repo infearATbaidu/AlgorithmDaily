@@ -7,8 +7,8 @@ import java.util.HashMap;
  */
 public class ListSolution {
     public static void main(String args[]) {
-        ListNode n1 = new ListNode(0, new ListNode(0, null));
-        new ListSolution().isPalindrome2(n1);
+        ListNode n1 = new ListNode(0, new ListNode(1, new ListNode(1, null)));
+        new ListSolution().oddEvenList(n1);
     }
 
     public ListNode reverseList(ListNode head) {
@@ -250,29 +250,25 @@ public class ListSolution {
         应当保持奇数节点和偶数节点的相对顺序。
         链表的第一个节点视为奇数节点，第二个节点视为偶数节点，以此类推。*/
     public ListNode oddEvenList(ListNode head) {
-        if (head == null) {
-            return null;
-        }
-        ListNode odd = head, even = head.next, evenHead = even;
-        boolean flag = true;
-        while (odd != null & even != null) {
-            if (flag) {
-                odd.next = even.next;
-                if (odd.next == null) {
-                    break;
-                }
-                odd = odd.next;
+        ListNode evenHead = new ListNode(-1, null), oddHead = new ListNode(-1, null);
+        ListNode oddCur = oddHead, evenCur = evenHead, cur = head, tmp;
+        boolean isOdd = true;
+        while (cur != null) {
+            if (isOdd) {
+                oddCur.next = cur;
+                oddCur = oddCur.next;
             } else {
-                even.next = odd.next;
-                if (even.next == null) {
-                    break;
-                }
-                even = even.next;
+                evenCur.next = cur;
+                evenCur = evenCur.next;
             }
-            flag = !flag;
+            isOdd = !isOdd;
+            // need to clear cur.next here.
+            tmp = cur.next;
+            cur.next = null;
+            cur = tmp;
         }
-        odd.next = evenHead;
-        return head;
+        oddCur.next = evenHead.next;
+        return oddHead.next;
     }
 
     /*    两数相加
