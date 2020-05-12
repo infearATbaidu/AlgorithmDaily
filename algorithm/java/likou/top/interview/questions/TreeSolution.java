@@ -6,7 +6,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author infear
@@ -26,23 +25,22 @@ public class TreeSolution {
     }
 
     public int kthSmallest(TreeNode root, int k) {
-        AtomicInteger count = new AtomicInteger(k);
-        TreeNode node = preOrder(root, count);
-        return node.val;
-    }
-
-    private TreeNode preOrder(TreeNode root, AtomicInteger count) {
-        if (root == null) {
-            return null;
+        LinkedList<TreeNode> path = new LinkedList<>();
+        int cnt = 0;
+        TreeNode cur = root;
+        while (cur != null || !path.isEmpty()) {
+            while (cur != null) {
+                path.add(cur);
+                cur = cur.left;
+            }
+            TreeNode top = path.pollLast();
+            cnt++;
+            if (cnt == k) {
+                return top.val;
+            }
+            cur = top.right;
         }
-        TreeNode left = preOrder(root.left, count);
-        if (left != null) {
-            return left;
-        }
-        if (count.decrementAndGet() == 0) {
-            return root;
-        }
-        return preOrder(root.right, count);
+        return -1;
     }
 
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
@@ -106,7 +104,7 @@ public class TreeSolution {
                 s.push(cur);
                 cur = cur.left;
             }
-            cur = s.pop();
+            cur = s.pollLast();
             r.add(cur.val);
             cur = cur.right;
         }
