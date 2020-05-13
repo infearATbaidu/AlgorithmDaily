@@ -28,25 +28,19 @@ public class SortAndIndexSolution {
         说明: 输出结果可能非常大，所以你需要返回一个字符串而不是整数。*/
     public String largestNumber(int[] nums) {
         List<String> ele = Arrays.stream(nums).mapToObj(String::valueOf).collect(Collectors.toList());
-        ele.sort((o1, o2) -> {
-            if (o1.startsWith(o2) || o2.startsWith(o1)) {
-                return -((o1 + o2).compareTo(o2 + o1));
-            }
-            return -o1.compareTo(o2);
-        });
-        StringBuilder stringBuilder = new StringBuilder();
-        boolean zero = true;
-        for (String s : ele) {
-            if (s.equals("0") && zero) {
-                continue;
-            }
-            zero = false;
-            stringBuilder.append(s);
+        ele.sort((o1, o2) -> -((o1 + o2).compareTo(o2 + o1)));
+        StringBuilder r = new StringBuilder();
+        int index = 0;
+        while (index != ele.size() && ele.get(index).equals("0")) {
+            index++;
         }
-        if (zero) {
+        if (index == ele.size()) {
             return "0";
         }
-        return stringBuilder.toString();
+        while (index != ele.size()) {
+            r.append(ele.get(index++));
+        }
+        return r.toString();
     }
 
     /*    寻找重复数
@@ -114,10 +108,10 @@ public class SortAndIndexSolution {
             return -1;
         }
         int s = 0, e = nums.length, mid;
-        while (true) {
+        while (s < e) {
             mid = (s + e) / 2;
-            if (s == mid) {
-                return s;
+            if (mid == s) {
+                break;
             }
             if (nums[mid] > nums[mid - 1]) {
                 s = mid;
@@ -125,6 +119,7 @@ public class SortAndIndexSolution {
                 e = mid;
             }
         }
+        return s;
     }
 
     /*    摆动排序 II
