@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  */
 public class SortAndIndexSolution {
     public static void main(String args[]) {
-        new SortAndIndexSolution().search(new int[] {1, 3}, 3);
+        new SortAndIndexSolution().findDuplicate(new int[] {1, 3, 4, 2, 2});
     }
 
     /*    最大数
@@ -61,22 +61,20 @@ public class SortAndIndexSolution {
         时间复杂度小于 O(n2) 。
         数组中只有一个重复的数字，但它可能不止重复出现一次。*/
     public int findDuplicate(int[] nums) {
-        int slow = 0, fast = 0, t = 0;
+        int slow = 0, fast = slow;
         while (true) {
-            slow = nums[slow];
             fast = nums[nums[fast]];
+            slow = nums[slow];
             if (slow == fast) {
                 break;
             }
         }
-        while (true) {
+        slow = 0;
+        while (slow != fast) {
             slow = nums[slow];
-            t = nums[t];
-            if (slow == t) {
-                break;
-            }
+            fast = nums[fast];
         }
-        return slow;
+        return fast;
     }
 
 /*    寻找峰值
