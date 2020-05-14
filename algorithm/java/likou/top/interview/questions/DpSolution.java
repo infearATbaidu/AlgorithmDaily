@@ -67,20 +67,19 @@ public class DpSolution {
 
         输出: 42*/
     public int maxPathSum(TreeNode root) {
-        List<Integer> result = new ArrayList<>();
-        result.add(Integer.MIN_VALUE);
-        calMaxPathFrom(root, result);
-        return result.get(0);
+        // use array to record the max result during the "calMaxPathFrom" recursive phrase.
+        int max[] = {Integer.MIN_VALUE};
+        calMaxPathFrom(root, max);
+        return max[0];
     }
 
-    private int calMaxPathFrom(TreeNode root, List<Integer> result) {
+    private int calMaxPathFrom(TreeNode root, int[] max) {
         if (root == null) {
-            result.set(0, Math.max(result.get(0), Integer.MIN_VALUE));
             return 0;
         }
-        int left = calMaxPathFrom(root.left, result), right = calMaxPathFrom(root.right, result);
+        int left = calMaxPathFrom(root.left, max), right = calMaxPathFrom(root.right, max);
         int tmp = Math.max(Math.max(root.val, root.val + left), Math.max(root.val + right, root.val + left + right));
-        result.set(0, Math.max(result.get(0), tmp));
+        max[0] = Math.max(max[0], tmp);
         return Math.max(Math.max(root.val, root.val + left), root.val + right);
     }
 
