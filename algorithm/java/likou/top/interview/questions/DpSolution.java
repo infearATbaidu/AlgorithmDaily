@@ -31,8 +31,8 @@ public class DpSolution {
         int arr[] = new int[n + 1];
         arr[0] = 0;
         for (int k = 1; k != n + 1; k++) {
-            int root = (int) Math.sqrt((double) k);
-            int min = n;
+            int root = (int) Math.sqrt(k);
+            int min = k;
             for (int i = 1; i <= root; i++) {
                 min = Math.min(min, arr[k - i * i]);
             }
