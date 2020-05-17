@@ -98,22 +98,20 @@ public class DpSolution {
         for (int ele : nums) {
             set.add(ele);
         }
-        int max = -1;
+        int max = 0;
         for (int ele : nums) {
             if (!set.contains(ele)) {
                 continue;
             }
-            int cur = 0;
-            int copy = ele;
+            int cur = 1;
+            int copy = ele + 1;
             while (set.contains(copy)) {
-                set.remove(copy);
-                copy++;
+                set.remove(copy++);
                 cur++;
             }
             copy = ele - 1;
             while (set.contains(copy)) {
-                set.remove(copy);
-                copy--;
+                set.remove(copy--);
                 cur++;
             }
             max = Math.max(cur, max);
