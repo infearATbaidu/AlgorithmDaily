@@ -135,33 +135,34 @@ public class BeginningSolution {
     }
 
     public void merge2(int[] nums1, int m, int[] nums2, int n) {
-        int i = 0, j = 0, end = m - 1;
-        while (i != m + n && j != n) {
-            // nums1 has meet end.
-            if (i > end) {
+        int i = 0, j = i, end = m;
+        // 目标：把所有nums2中的元素插入nums1中，插入结束排序就完成
+        while (j != n) {
+            // 找到第一个大于nums2[j]的元素
+            while (i != end && nums1[i] < nums2[j]) {
+                i++;
+            }
+            // 没有找到，把nums[2]中的元素拷贝到nums1的末尾
+            if (i == end) {
                 while (i != m + n) {
                     nums1[i++] = nums2[j++];
                 }
                 break;
             }
-            // nums1 has remainder elements. find first nums1[i] > nums2[j]
-            if (nums1[i] <= nums2[j]) {
-                i++;
-                continue;
-            }
-            // find last nums2[k] <= nums1[i]
+            // 找到最后一个小于nums1[i]的元素
             int k = j;
             while (k != n && nums2[k] <= nums1[i]) {
                 k++;
             }
-            // copy nums2[j:k) to nums1[i:)
-            // first copy nums1[i:] to nums1[i+k-j:]
-            System.arraycopy(nums1, i, nums1, i + k - j, end - i + 1);
-            // copy nums2[j:k) to nums1[i:]
+            // nums1[i:end) 后移k-j个位置，给nums2中的元素腾出空间
+            System.arraycopy(nums1, i, nums1, i + k - j, end - i);
+            // nums2[j:k) 拷贝到 num1[i:i+k-j)
             System.arraycopy(nums2, j, nums1, i, k - j);
-            end += k - j;
-            j = k;
+            // nums1的指针i后移，由于长度变大，end也要后移
             i += k - j;
+            end += k - j;
+            // nums2的指针j后移
+            j = k;
         }
     }
 
