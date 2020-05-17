@@ -235,19 +235,12 @@ public class DpSolution {
         解释: 偷窃 1 号房屋 (金额 = 2), 偷窃 3 号房屋 (金额 = 9)，接着偷窃 5 号房屋 (金额 = 1)。
         偷窃到的最高金额 = 2 + 9 + 1 = 12 。*/
     public int rob(int[] nums) {
-        if (nums.length == 0) {
-            return 0;
+        // 多两个元素用于计算r[nums.length-1]，避免特殊处理
+        int[] r = new int[nums.length + 2];
+        for (int i = nums.length - 1; i != -1; i--) {
+            r[i] = Math.max(nums[i] + r[i + 2], r[i + 1]);
         }
-        if (nums.length == 1) {
-            return nums[0];
-        }
-        int r[] = new int[nums.length];
-        r[0] = nums[0];
-        r[1] = Math.max(nums[0], nums[1]);
-        for (int i = 2; i != nums.length; i++) {
-            r[i] = Math.max(nums[i] + r[i - 2], r[i - 1]);
-        }
-        return r[nums.length - 1];
+        return r[0];
     }
 
     /*    零钱兑换
