@@ -2,7 +2,6 @@ package likou.top.interview.questions;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -251,12 +250,7 @@ public class DpSolution {
         for (Integer coin : coins) {
             eles.add(coin);
         }
-        Collections.sort(eles, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o1 > o2 ? -1 : (o1 == o2 ? 0 : 1);
-            }
-        });
+        Collections.sort(eles, (o1, o2) -> o1 > o2 ? -1 : (o1 == o2 ? 0 : 1));
         HashMap<Integer, Integer> sub = new HashMap<>();
         sub.put(0, 0);
         change(eles, amount, sub);
@@ -283,6 +277,23 @@ public class DpSolution {
                 }
             }
         }
+    }
+
+    public int coinChange2(int[] coins, int amount) {
+        int r[] = new int[amount + 1];
+        r[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            r[i] = Integer.MAX_VALUE;
+            for (int coin : coins) {
+                if ((i > coin && r[i - coin] != -1) || i == coin) {
+                    r[i] = Math.min(r[i], r[i - coin] + 1);
+                }
+            }
+            if (r[i] == Integer.MAX_VALUE) {
+                r[i] = -1;
+            }
+        }
+        return r[amount];
     }
 
     /*    不同路径
@@ -357,4 +368,75 @@ public class DpSolution {
         }
         return r[0];
     }
+
+    /*    矩阵中的最长递增路径
+        给定一个整数矩阵，找出最长递增路径的长度。
+
+        对于每个单元格，你可以往上，下，左，右四个方向移动。 你不能在对角线方向上移动或移动到边界外（即不允许环绕）。
+
+        示例 1:
+
+        输入: nums =
+                [
+                [9,9,4],
+                [6,6,8],
+                [2,1,1]
+                ]
+        输出: 4
+        解释: 最长递增路径为 [1, 2, 6, 9]。
+        示例 2:
+
+        输入: nums =
+                [
+                [3,4,5],
+                [3,2,6],
+                [2,2,1]
+                ]
+        输出: 4
+        解释: 最长递增路径是 [3, 4, 5, 6]。注意不允许在对角线方向上移动。*/
+    public int longestIncreasingPath(int[][] matrix) {
+        if (matrix.length == 0) {
+            return 0;
+        }
+        //visited有两个作用：1.判断是否访问过，2.存储当前格子的最长递增长度
+        int[][] visited = new int[matrix.length][matrix[0].length];
+        int max = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (visited[i][j] == 0) {
+                    //这里先做一次比较找出max，可以避免最后再去遍历一个visited数组
+                    max = Math.max(max, dfs(i, j, matrix, visited));
+                }
+                max = Math.max(max, visited[i][j]);
+            }
+        }
+        return max;
+    }
+
+    public int dfs(int i, int j, int[][] matrix, int[][] visited) {
+        if (i < 0 || i >= matrix.length || j < 0 || j >= matrix[0].length) {
+            return 0;
+        }
+        if (visited[i][j] > 0) {
+            return visited[i][j];
+        }
+        int max = 0;
+        //这里分别去判断4周是否比当前数小，然后去递归遍历
+        if (i - 1 >= 0 && matrix[i - 1][j] < matrix[i][j]) {
+            max = Math.max(max, dfs(i - 1, j, matrix, visited));
+        }
+        if (i + 1 < matrix.length && matrix[i + 1][j] < matrix[i][j]) {
+            max = Math.max(max, dfs(i + 1, j, matrix, visited));
+        }
+        if (j - 1 >= 0 && matrix[i][j - 1] < matrix[i][j]) {
+            max = Math.max(max, dfs(i, j - 1, matrix, visited));
+        }
+        if (j + 1 < matrix[0].length && matrix[i][j + 1] < matrix[i][j]) {
+            max = Math.max(max, dfs(i, j + 1, matrix, visited));
+        }
+
+        visited[i][j] = max + 1;
+        return max + 1;
+    }
+
 }
