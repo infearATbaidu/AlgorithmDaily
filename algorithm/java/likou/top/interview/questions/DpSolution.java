@@ -403,10 +403,8 @@ public class DpSolution {
         int max = 0;
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
-                if (visited[i][j] == 0) {
-                    //这里先做一次比较找出max，可以避免最后再去遍历一个visited数组
-                    max = Math.max(max, dfs(i, j, matrix, visited));
-                }
+                //这里先做一次比较找出max，可以避免最后再去遍历一个visited数组
+                dfs(i, j, matrix, visited);
                 max = Math.max(max, visited[i][j]);
             }
         }
@@ -414,9 +412,6 @@ public class DpSolution {
     }
 
     public int dfs(int i, int j, int[][] matrix, int[][] visited) {
-        if (i < 0 || i >= matrix.length || j < 0 || j >= matrix[0].length) {
-            return 0;
-        }
         if (visited[i][j] > 0) {
             return visited[i][j];
         }
