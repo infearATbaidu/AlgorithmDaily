@@ -1,6 +1,6 @@
 package likou.top.interview.questions;
 
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public class GraphySolution {
     public static void main(String args[]) {
-        new GraphySolution().ladderLength("hit", "cog", Arrays.asList("hot", "dot", "dog", "lot", "log", "cog"));
+        new GraphySolution().canFinish(2, new int[][] {{0, 1}, {1, 0}});
     }
 
     public int numIslands(char[][] grid) {
@@ -87,7 +87,7 @@ public class GraphySolution {
         all.remove(endWord);
         all.add(beginWord);
 
-        // 当前层的单词，第一层为endword，第二层为和endword距离为1的单词集合，第三层为和第二层中某个单词距离为1的单词几何，以此类推
+        // 当前层的单词，第一层为endword，第二层为和endword距离为1的单词集合，第三层为和第二层中某个单词距离为1的单词集合，以此类推
         Set<String> curLayer = new HashSet<>();
         curLayer.add(endWord);
         int i = 1;
@@ -121,6 +121,40 @@ public class GraphySolution {
                 }
             }
         }
+        return true;
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        HashMap<Integer, Set<Integer>> m = new HashMap<>();
+        for (int[] pair : prerequisites) {
+            int pre = pair[1], post = pair[0];
+            m.putIfAbsent(pre, new HashSet<>());
+            m.get(pre).add(post);
+        }
+        boolean[] visited = new boolean[numCourses], path = new boolean[numCourses];
+        for (int i = 0; i != numCourses; i++) {
+            if (visited[i]) {
+                continue;
+            }
+            if (!dfs(i, visited, path, m)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(int i, boolean[] visited, boolean[] path, HashMap<Integer, Set<Integer>> prerequisites) {
+        if (path[i]) {
+            return false;
+        }
+        visited[i] = true;
+        path[i] = true;
+        for (Integer post : prerequisites.getOrDefault(i, new HashSet<>())) {
+            if (!dfs(post, visited, path, prerequisites)) {
+                return false;
+            }
+        }
+        path[i] = false;
         return true;
     }
 }
