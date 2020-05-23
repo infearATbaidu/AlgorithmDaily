@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public class GraphySolution {
     public static void main(String args[]) {
-        new GraphySolution().canFinish(2, new int[][] {{0, 1}, {1, 0}});
+        new GraphySolution().findOrder(2, new int[][] {{0, 1}});
     }
 
     public int numIslands(char[][] grid) {
@@ -125,12 +125,7 @@ public class GraphySolution {
     }
 
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        HashMap<Integer, Set<Integer>> m = new HashMap<>();
-        for (int[] pair : prerequisites) {
-            int pre = pair[1], post = pair[0];
-            m.putIfAbsent(pre, new HashSet<>());
-            m.get(pre).add(post);
-        }
+        HashMap<Integer, Set<Integer>> m = getPreMap(prerequisites);
         boolean[] visited = new boolean[numCourses], path = new boolean[numCourses];
         for (int i = 0; i != numCourses; i++) {
             if (visited[i]) {
@@ -156,5 +151,56 @@ public class GraphySolution {
         }
         path[i] = false;
         return true;
+    }
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        HashMap<Integer, Set<Integer>> preToPost = new HashMap<>(), postToPre = new HashMap<>();
+        for (int[] pair : prerequisites) {
+            int pre = pair[1], post = pair[0];
+            preToPost.putIfAbsent(pre, new HashSet<>());
+            preToPost.get(pre).add(post);
+            postToPre.putIfAbsent(post, new HashSet<>());
+            postToPre.get(post).add(pre);
+        }
+        // calculate the most outer layer
+        Set<Integer> all = new HashSet<>(), outer = new HashSet<>();
+        for (int i = 0; i != numCourses; i++) {
+            all.add(i);
+            if (!preToPost.containsKey(i)) {
+                outer.add(i);
+            }
+        }
+        int[] result = new int[numCourses];
+        int index = numCourses;
+        while (!all.isEmpty()) {
+            if (outer.isEmpty()) {
+                return new int[0];
+            }
+            Set<Integer> outerCopy = new HashSet();
+            for (int ele : outer) {
+                result[--index] = ele;
+                all.remove(ele);
+                if (postToPre.containsKey(ele)) {
+                    for (int pre : postToPre.get(ele)) {
+                        preToPost.get(pre).remove(ele);
+                        if (preToPost.get(pre).isEmpty() && all.contains(pre)) {
+                            outerCopy.add(pre);
+                        }
+                    }
+                }
+            }
+            outer = outerCopy;
+        }
+        return result;
+    }
+
+    private HashMap<Integer, Set<Integer>> getPreMap(int[][] prerequisites) {
+        HashMap<Integer, Set<Integer>> m = new HashMap<>();
+        for (int[] pair : prerequisites) {
+            int pre = pair[1], post = pair[0];
+            m.putIfAbsent(pre, new HashSet<>());
+            m.get(pre).add(post);
+        }
+        return m;
     }
 }
