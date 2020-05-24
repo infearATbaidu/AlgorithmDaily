@@ -7,15 +7,17 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author infear
  */
 public class StringSolution {
     public static void main(String args[]) {
-        new StringSolution().multiply("0", "59");
+        new StringSolution().wordBreak2("catsanddog", Arrays.asList("cat", "cats", "and", "sand", "dog"));
     }
 
     /* 验证回文串
@@ -268,48 +270,35 @@ public class StringSolution {
     输出:
             []*/
     public List<String> wordBreak2(String s, List<String> wordDict) {
-        int l = s.length();
-        List<List<Integer>>[] r = new List[l + 1];
-        // use index instead of string
-        // List<String>[] r = new List[l + 1];
-        r[l] = new LinkedList<>();
-        Set<String> dict = new HashSet<>(wordDict);
-        for (int outIndex = l - 1; outIndex >= 0; outIndex--) {
-            List<List<Integer>> tmp = new LinkedList<>();
-            for (int innerIndex = outIndex + 1; innerIndex <= l; innerIndex++) {
-                String sub = s.substring(outIndex, innerIndex);
-                if (dict.contains(sub) && r[innerIndex] != null) {
-                    if (r[innerIndex].isEmpty()) {
-                        tmp.add(Arrays.asList(outIndex, innerIndex));
-                    } else {
-                        for (List<Integer> indexes : r[innerIndex]) {
-                            List copy = new LinkedList(indexes);
-                            copy.add(0, innerIndex);
-                            copy.add(0, outIndex);
-                            tmp.add(copy);
-                        }
+        Trie trie = new Trie();
+        HashMap<String, Integer> wordIndex = new HashMap<>();
+        for (int i = 0; i != wordDict.size(); i++) {
+            trie.insert(wordDict.get(i));
+            wordIndex.put(wordDict.get(i), i);
+        }
+        HashMap<Integer, Set<Integer>> startToEndMatched = new HashMap<>();
+        for (int i = 0; i != s.length(); i++) {
+            startToEndMatched.put(i, trie.searchEndMatchIndex(s, i));
+        }
+        List<List<Integer>>[] r = new List[s.length() + 1];
+        r[s.length()] = Arrays.asList(Arrays.asList());
+        for (int i = s.length() - 1; i != -1; i--) {
+            List<List<Integer>> cur = new LinkedList<>();
+            for (int j = i + 1; j <= s.length(); j++) {
+                if (!r[j].isEmpty() && startToEndMatched.get(i).contains(j)) {
+                    for (List<Integer> sub : r[j]) {
+                        List<Integer> copy = new LinkedList(sub);
+                        copy.add(0, wordIndex.get(s.substring(i, j)));
+                        cur.add(copy);
                     }
                 }
             }
-            if (tmp.isEmpty()) {
-                r[outIndex] = null;
-            } else {
-                r[outIndex] = tmp;
-            }
+            r[i] = cur;
         }
         List<String> result = new LinkedList<>();
-        if (r[0] == null) {
-            return result;
-        }
         for (List<Integer> indexes : r[0]) {
-            int i = 0;
-            StringBuilder builder = new StringBuilder(s.length());
-            while (i != indexes.size()) {
-                builder.append(s, indexes.get(i), indexes.get(i + 1)).append(" ");
-                i += 2;
-            }
-            builder.deleteCharAt(builder.length() - 1);
-            result.add(builder.toString());
+            List<String> ele = indexes.stream().map(i -> wordDict.get(i)).collect(Collectors.toList());
+            result.add(String.join(" ", ele));
         }
         return result;
     }
@@ -874,6 +863,85 @@ public class StringSolution {
             r.deleteCharAt(r.length() - 1);
         }
         return r.toString();
+    }
+
+    class Trie {
+        public static final int END = '&';
+        public Map<Integer, Trie> sources;
+        public Integer value = -1;
+        // path from root
+        public String str = "";
+
+        /**
+         * Initialize your data structure here.
+         */
+        public Trie() {
+            sources = new HashMap<>();
+        }
+
+        public Trie(Map<Integer, Trie> sources, Integer value, String str) {
+            this.sources = sources;
+            this.value = value;
+            this.str = str;
+        }
+
+        public Trie getSourceByValue(Integer value) {
+            return sources.getOrDefault(value, null);
+        }
+
+        public String getStr() {
+            return str;
+        }
+
+        /**
+         * Inserts a word into the trie.
+         */
+        public void insert(String word) {
+            if (word == null) {
+                return;
+            }
+            Trie cur = this;
+            for (char c : word.toCharArray()) {
+                cur.sources.putIfAbsent((int) c, new Trie(new HashMap<>(), (int) c, cur.str + c));
+                cur = cur.sources.get((int) c);
+            }
+            cur.sources.putIfAbsent(END, null);
+        }
+
+        // return the end position in word which make word[start, end), otherwise return start;
+        public Set<Integer> searchEndMatchIndex(String word, int start) {
+            Trie cur = this;
+            char arr[] = word.toCharArray();
+            Set<Integer> index = new HashSet<>();
+            for (int i = start; i != arr.length; i++) {
+                cur = cur.sources.getOrDefault((int) arr[i], null);
+                if (cur == null) {
+                    return index;
+                }
+                if (cur.sources.containsKey(END)) {
+                    index.add(i + 1);
+                }
+            }
+            return index;
+        }
+
+        /**
+         * Returns if there is any word in the trie that starts with the given prefix.
+         */
+        public boolean startsWith(String prefix) {
+            Trie cur = this;
+            for (char c : prefix.toCharArray()) {
+                cur = cur.sources.getOrDefault((int) c, null);
+                if (cur == null) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public boolean hasEnd() {
+            return sources.containsKey(END);
+        }
     }
 
     class Coodinate {
