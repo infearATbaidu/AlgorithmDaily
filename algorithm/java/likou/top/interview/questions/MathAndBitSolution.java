@@ -6,6 +6,10 @@ import java.util.LinkedHashMap;
  * @author infear
  */
 public class MathAndBitSolution {
+    public static void main(String args[]) {
+        new MathAndBitSolution().reverseBits(43261596);
+    }
+
     /*    只出现一次的数字
         给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
 
@@ -193,5 +197,23 @@ public class MathAndBitSolution {
             }
         }
         return count;
+    }
+
+    // you need treat n as an unsigned value
+    public int reverseBits(int n) {
+        String str = Integer.toBinaryString(n);
+        while (str.length() != 32) {
+            str = "0" + str;
+        }
+        int i = 0, j = str.length() - 1;
+        char arr[] = str.toCharArray();
+        while (i < j) {
+            char tmp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = tmp;
+            i++;
+            j--;
+        }
+        return Integer.parseUnsignedInt(new String(arr), 2);
     }
 }
