@@ -833,6 +833,40 @@ public class StringSolution {
         return r.toString();
     }
 
+    public String multiply2(String num1, String num2) {
+        String result = "0";
+        for (int index = num2.length() - 1; index != -1; index--) {
+            int value = num2.charAt(index) - '0';
+            String r = "0";
+            for (int i = 0; i != value; i++) {
+                r = add(r, num1);
+            }
+            if (!r.equals("0")) {
+                for (int i = 0; i != num2.length() - 1 - index; i++) {
+                    r = r + "0";
+                }
+            }
+            result = add(result, r);
+        }
+        return result;
+    }
+
+    private String add(String n1, String n2) {
+        StringBuilder r = new StringBuilder();
+        int flag = 0;
+        int idx1 = n1.length() - 1, idx2 = n2.length() - 1;
+        while (flag == 1 || idx1 >= 0 || idx2 >= 0) {
+            int v1 = idx1 >= 0 ? n1.charAt(idx1) - '0' : 0;
+            int v2 = idx2 >= 0 ? n2.charAt(idx2) - '0' : 0;
+            int sum = v1 + v2 + flag;
+            flag = sum / 10;
+            r.insert(0, sum % 10);
+            idx1--;
+            idx2--;
+        }
+        return r.toString();
+    }
+
     /*    翻转字符串里的单词
         给定一个字符串，逐个翻转字符串中的每个单词。
         示例 1：
