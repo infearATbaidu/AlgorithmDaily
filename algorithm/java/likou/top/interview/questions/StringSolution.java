@@ -512,7 +512,6 @@ public class StringSolution {
                 max = Math.max(index - start, max);
             } else {
                 int pos = charToPos.get(key);
-                // remove all pair before pos and recount from new start.
                 start = pos;
                 charToPos.put(key, index);
             }
@@ -712,6 +711,24 @@ public class StringSolution {
             }
         }
         return r;
+    }
+
+    public String longestCommonPrefix2(String[] strs) {
+        if (strs.length == 0) {
+            return "";
+        }
+        String r = strs[0];
+        int index = 0;
+        while (index != r.length()) {
+            for (String str : strs) {
+                // 存在一个字符串的长度不够，或者对应位置字符不一致
+                if (index >= str.length() || str.charAt(index) != r.charAt(index)) {
+                    return r.substring(0, index);
+                }
+            }
+            index++;
+        }
+        return r.substring(0, index);
     }
 
     /*    字符串的排列
