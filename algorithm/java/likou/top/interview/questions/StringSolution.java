@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  */
 public class StringSolution {
     public static void main(String args[]) {
-        new StringSolution().wordBreak2("catsanddog", Arrays.asList("cat", "cats", "and", "sand", "dog"));
+        new StringSolution().simplifyPath("/a//b////c/d//././/..");
     }
 
     /* 验证回文串
@@ -75,10 +75,14 @@ public class StringSolution {
         输入：["H","a","n","n","a","h"]
         输出：["h","a","n","n","a","H"]*/
     public void reverseString(char[] s) {
+        reverseString(s, 0, s.length);
+    }
+
+    public void reverseString(char[] s, int start, int end) {
         if (s == null || s.length == 0) {
             return;
         }
-        int i = 0, j = s.length - 1;
+        int i = start, j = end - 1;
         char tmp;
         while (i < j) {
             tmp = s[i];
@@ -914,6 +918,58 @@ public class StringSolution {
             r.deleteCharAt(r.length() - 1);
         }
         return r.toString();
+    }
+
+    public String reverseWords2(String s) {
+        char[] arr = s.toCharArray();
+        reverseString(arr, 0, arr.length);
+        int index = 0;
+        List<String> words = new LinkedList<>();
+        while (index != arr.length) {
+            while (index != arr.length && arr[index] == ' ') {
+                index++;
+            }
+            if (index == arr.length) {
+                break;
+            }
+            int end = index;
+            while (end != arr.length && arr[end] != ' ') {
+                end++;
+            }
+            reverseString(arr, index, end);
+            words.add(new String(arr, index, end - index));
+            index = end;
+        }
+        return String.join(" ", words);
+    }
+
+    /*    简化路径
+        以 Unix 风格给出一个文件的绝对路径，你需要简化它。或者换句话说，将其转换为规范路径。
+
+        在 Unix 风格的文件系统中，一个点（.）表示当前目录本身；此外，两个点 （..） 表示将目录切换到上一级（指向父目录）；两者都可以是复杂相对路径的组成部分。更多信息请参阅：Linux / Unix中的绝对路径 vs
+         相对路径
+
+        请注意，返回的规范路径必须始终以斜杠 / 开头，并且两个目录名之间必须只有一个斜杠 /。最后一个目录名（如果存在）不能以 / 结尾。此外，规范路径必须是表示绝对路径的最短字符串。*/
+    public String simplifyPath(String path) {
+        String[] dirs = path.split("/");
+        LinkedList dirStack = new LinkedList();
+        for (String dir : dirs) {
+            if (dir.length() == 0) {
+                continue;
+            }
+            switch (dir) {
+                case ".":
+                    break;
+                case "..":
+                    if (!dirStack.isEmpty()) {
+                        dirStack.pollLast();
+                    }
+                    break;
+                default:
+                    dirStack.add(dir);
+            }
+        }
+        return "/" + String.join("/", dirStack);
     }
 
     class Trie {
