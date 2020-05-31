@@ -523,54 +523,6 @@ public class StringSolution {
         return max;
     }
 
-    /*    三数之和
-        给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
-
-        注意：答案中不可以包含重复的三元组。
-
-
-
-        示例：
-
-        给定数组 nums = [-1, 0, 1, 2, -1, -4]，
-
-        满足要求的三元组集合为：
-                [
-                [-1, 0, 1],
-                [-1, -1, 2]
-                ]*/
-    public List<List<Integer>> threeSum(int[] nums) {
-        if (nums.length <= 2) {
-            return new ArrayList<>();
-        }
-        Arrays.sort(nums);
-        HashMap<Integer, Integer> pos = new HashMap<>();
-        // record each element last position(nearest to array end)
-        for (int i = 0; i != nums.length; i++) {
-            pos.put(nums[i], i);
-        }
-        List<List<Integer>> r = new ArrayList();
-        int lastFirst = nums[0] - 1, lastSecond = nums[0] - 1;
-        for (int i = 0; i != nums.length; i++) {
-            if (lastFirst == nums[i]) {
-                continue;
-            }
-            lastFirst = nums[i];
-            for (int j = i + 1; j != nums.length; j++) {
-                if (nums[j] == lastSecond) {
-                    continue;
-                }
-                lastSecond = nums[j];
-                int val = nums[i] + nums[j];
-                if (!pos.containsKey(-val) || pos.get(-val) <= j) {
-                    continue;
-                }
-                r.add(Arrays.asList(nums[i], nums[j], -val));
-            }
-        }
-        return r;
-    }
-
 /*    矩阵置零
     给定一个 m x n 的矩阵，如果一个元素为 0，则将其所在行和列的所有元素都设为 0。请使用原地算法。
 

@@ -1,13 +1,23 @@
 package likou.top.interview.questions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author infear
  */
 public class MathAndBitSolution {
     public static void main(String args[]) {
-        new MathAndBitSolution().reverseBits(43261596);
+        int array[][] = new int[][] {{-54, -297}, {-36, -222}, {3, -2}, {30, 53}, {-5, 1}, {-36, -222}, {0, 2}, {1, 3},
+                {6, -47}, {0, 4}, {2, 3}, {5, 0}, {48, 128}, {24, 28}, {0, -5}, {48, 128}, {-12, -122}, {-54, -297},
+                {-42, -247}, {-5, 0}, {2, 4}, {0, 0}, {54, 153}, {-30, -197}, {4, 5}, {4, 3}, {-42, -247}, {6, -47},
+                {-60, -322}, {-4, -2}, {-18, -147}, {6, -47}, {60, 178}, {30, 53}, {-5, 3}, {-42, -247}, {2, -2},
+                {12, -22}, {24, 28}, {0, -72}, {3, -4}, {-60, -322}, {48, 128}, {0, -72}, {-5, 3}, {5, 5}, {-24, -172},
+                {-48, -272}, {36, 78}, {-3, 3}};
+        new MathAndBitSolution().maxPoints(array);
     }
 
     /*    只出现一次的数字
@@ -215,5 +225,92 @@ public class MathAndBitSolution {
             j--;
         }
         return Integer.parseUnsignedInt(new String(arr), 2);
+    }
+
+    /*    位1的个数
+        编写一个函数，输入是一个无符号整数，返回其二进制表达式中数字位数为 ‘1’ 的个数（也被称为汉明重量）。*/
+    public int hammingWeight(int n) {
+        String str = Integer.toBinaryString(n);
+        int cnt = 0;
+        for (char c : str.toCharArray()) {
+            if (c == '1') {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    /*    直线上最多的点数
+        给定一个二维平面，平面上有 n 个点，求最多有多少个点在同一条直线上。*/
+    public int maxPoints(int[][] points) {
+        if (points.length == 0) {
+            return 0;
+        }
+        // 去掉重复的点，统计每个点的出现次数
+        HashMap<Pair, Integer> pointDuplicateCnts = new HashMap<>();
+        for (int[] pair : points) {
+            Pair<Long> point = new Pair(Long.valueOf(pair[0]), Long.valueOf(pair[1]));
+            pointDuplicateCnts.put(point, pointDuplicateCnts.getOrDefault(point, 0) + 1);
+        }
+        List<Pair> pointSet = new ArrayList<>(pointDuplicateCnts.keySet());
+        if (pointSet.size() == 1) {
+            return points.length;
+        }
+        HashMap<Pair, Integer> slopeCounts = new HashMap();
+        int index = 0, max = 1;
+        // 遍历不重复的点
+        while (index != pointSet.size()) {
+            Pair curP = pointSet.get(index);
+            for (int i = 0; i < index; i++) {
+                Pair target = pointSet.get(i);
+                // 计算斜率a和b
+                Pair slope = cal(target, curP);
+                if (slopeCounts.containsKey(slope)) {
+                    slopeCounts.put(slope, pointDuplicateCnts.get(curP));
+                } else {
+                    slopeCounts.put(slope, pointDuplicateCnts.get(target) + pointDuplicateCnts.get(curP));
+                }
+                max = Math.max(slopeCounts.get(slope), max);
+            }
+            System.out.println(max);
+            index++;
+        }
+        return max;
+    }
+
+    private Pair<Pair<Long>> cal(Pair<Long> target, Pair<Long> curP) {
+        long x1 = target.x, y1 = target.y, x2 = curP.x, y2 = curP.y;
+        if (x1 == x2) {
+            return new Pair(new Pair<>(1, 1), new Pair(-x1, 1));
+        }
+        return new Pair(new Pair<>(y2 - y1, x2 - x1), new Pair(x2 * y1 - x1 * y2, x2 - x1));
+    }
+
+    class Pair<T> {
+        T x;
+        T y;
+
+        public Pair(T x, T y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            Pair pair = (Pair) o;
+            return x.equals(pair.x) &&
+                    y.equals(pair.y);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
+        }
     }
 }
