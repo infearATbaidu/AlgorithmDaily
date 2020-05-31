@@ -972,6 +972,47 @@ public class StringSolution {
         return "/" + String.join("/", dirStack);
     }
 
+    /*
+        复原IP地址
+        给定一个只包含数字的字符串，复原它并返回所有可能的 IP 地址格式。
+
+        有效的 IP 地址正好由四个整数（每个整数位于 0 到 255 之间组成），整数之间用 '.' 分隔。
+    */
+    public List<String> restoreIpAddresses(String s) {
+        return restoreIpAddresses(s, 0, s.length(), 4);
+    }
+
+    private List<String> restoreIpAddresses(String s, int start, int end, int nums) {
+        if (nums == 0) {
+            if (start == end) {
+                return Arrays.asList("");
+            } else {
+                return new ArrayList<>();
+            }
+        }
+        List<String> r = new LinkedList<>();
+        for (int i = 1; i <= 3; i++) {
+            if (start + i > end) {
+                break;
+            }
+            String value = s.substring(start, start + i);
+            if ((value.charAt(0) != '0' || value.equals("0")) && Integer.valueOf(value) <= 255) {
+                List<String> sub = restoreIpAddresses(s, start + i, end, nums - 1);
+                if (sub.isEmpty()) {
+                    continue;
+                }
+                for (String suffix : sub) {
+                    if (suffix.length() == 0) {
+                        r.add(value + suffix);
+                    } else {
+                        r.add(value + "." + suffix);
+                    }
+                }
+            }
+        }
+        return r;
+    }
+
     class Trie {
         public static final int END = '&';
         public Map<Integer, Trie> sources;
