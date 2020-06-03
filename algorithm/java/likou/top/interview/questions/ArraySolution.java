@@ -14,7 +14,7 @@ import java.util.Set;
  */
 public class ArraySolution {
     public static void main(String args[]) {
-        System.out.println(new ArraySolution().threeSum2(new int[] {-1, 0, 1, 2, -1, -4}));
+        System.out.println(new ArraySolution().getPermutation2(3, 6));
     }
 
     /*给你一个整数数组 nums ，请你找出数组中乘积最大的连续子数组（该子数组中至少包含一个数字）。
@@ -375,6 +375,32 @@ solution.shuffle();*/
             index--;
         }
         return sb.toString();
+    }
+
+    public String getPermutation2(int n, int k) {
+        List<Integer> unused = new LinkedList<>();
+        int factorial[] = new int[n];
+        factorial[0] = 1;
+        for (int i = 1; i != n; i++) {
+            factorial[i] = factorial[i - 1] * i;
+            unused.add(i);
+        }
+        unused.add(n);
+
+        StringBuilder result = new StringBuilder();
+        while (k != 0) {
+            int q = k / factorial[n - 1], r = k % factorial[n - 1];
+            if (r != 0) {
+                q++;
+            }
+            result.append(unused.remove(q - 1));
+            n--;
+            k = r;
+        }
+        for (int i = unused.size() - 1; i != -1; i--) {
+            result.append(unused.get(i));
+        }
+        return result.toString();
     }
 
     /*    岛屿的最大面积
