@@ -1,5 +1,7 @@
 package likou.top.interview.questions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -12,7 +14,7 @@ import java.util.Set;
  */
 public class ArraySolution {
     public static void main(String args[]) {
-        System.out.println(new ArraySolution().getPermutation(4, 9));
+        System.out.println(new ArraySolution().threeSum2(new int[] {-1, 0, 1, 2, -1, -4}));
     }
 
     /*给你一个整数数组 nums ，请你找出数组中乘积最大的连续子数组（该子数组中至少包含一个数字）。
@@ -424,6 +426,91 @@ solution.shuffle();*/
             r += search(grid, i, j + 1);
         }
         return r;
+    }
+
+    /*    三数之和
+    给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
+
+    注意：答案中不可以包含重复的三元组。
+
+
+
+    示例：
+
+    给定数组 nums = [-1, 0, 1, 2, -1, -4]，
+
+    满足要求的三元组集合为：
+            [
+            [-1, 0, 1],
+            [-1, -1, 2]
+            ]*/
+    public List<List<Integer>> threeSum(int[] nums) {
+        if (nums.length <= 2) {
+            return new ArrayList<>();
+        }
+        Arrays.sort(nums);
+        HashMap<Integer, Integer> pos = new HashMap<>();
+        // record each element last position(nearest to array end)
+        for (int i = 0; i != nums.length; i++) {
+            pos.put(nums[i], i);
+        }
+        List<List<Integer>> r = new ArrayList();
+        int lastFirst = nums[0] - 1, lastSecond = nums[0] - 1;
+        for (int i = 0; i != nums.length; i++) {
+            if (lastFirst == nums[i]) {
+                continue;
+            }
+            lastFirst = nums[i];
+            for (int j = i + 1; j != nums.length; j++) {
+                if (nums[j] == lastSecond) {
+                    continue;
+                }
+                lastSecond = nums[j];
+                int val = nums[i] + nums[j];
+                if (!pos.containsKey(-val) || pos.get(-val) <= j) {
+                    continue;
+                }
+                r.add(Arrays.asList(nums[i], nums[j], -val));
+            }
+        }
+        return r;
+    }
+
+    public List<List<Integer>> threeSum2(int[] nums) {
+        HashMap<Integer, Integer> cnts = new HashMap<>();
+        for (int num : nums) {
+            cnts.put(num, cnts.getOrDefault(num, 0) + 1);
+        }
+        List<List<Integer>> result = new LinkedList<>();
+        for (Integer key : cnts.keySet()) {
+            if (cnts.get(key) >= 3) {
+                if (key == 0) {
+                    result.add(Arrays.asList(0, 0, 0));
+                }
+            }
+            if (cnts.get(key) >= 2) {
+                if (cnts.getOrDefault(-2 * key, 0) != 0 && key != 0) {
+                    result.add(Arrays.asList(key, key, -2 * key));
+                }
+            }
+            for (Integer key2 : cnts.keySet()) {
+                if (cnts.getOrDefault(key2, 0) == 0 || key2 == key) {
+                    continue;
+                }
+                if (2 * key2 + key == 0) {
+                    if (cnts.get(key2) >= 2) {
+                        result.add(Arrays.asList(key, key2, -key - key2));
+                    }
+                } else {
+                    if (cnts.getOrDefault(-key - key2, 0) != 0 && 2 * key + key2 != 0 && -key - key2 < key2) {
+                        result.add(Arrays.asList(key, key2, -key - key2));
+                    }
+                }
+
+            }
+            cnts.put(key, 0);
+        }
+        return result;
     }
 
     class Solution {
