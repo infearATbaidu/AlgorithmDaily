@@ -288,6 +288,54 @@ public class TreeSolution {
         return root;
     }
 
+    /*    给定一个二叉树，判断其是否是一个有效的二叉搜索树。
+
+        假设一个二叉搜索树具有如下特征：
+
+        节点的左子树只包含小于当前节点的数。
+        节点的右子树只包含大于当前节点的数。
+        所有左子树和右子树自身必须也是二叉搜索树。
+
+        来源：力扣（LeetCode）
+        链接：https://leetcode-cn.com/problems/validate-binary-search-tree
+        著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。*/
+    public boolean isValidBST(TreeNode root) {
+        return isValidBST(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    private boolean isValidBST(TreeNode root, long minValue, long maxValue) {
+        if (root == null) {
+            return true;
+        }
+        if (root.val >= maxValue || root.val <= minValue) {
+            return false;
+        }
+        return isValidBST(root.left, minValue, root.val) && isValidBST(root.right, root.val, maxValue);
+    }
+
+    public boolean isValidBST2(TreeNode root) {
+        List<Integer> result = new LinkedList();
+        mid(result, root);
+        if (result.size() <= 1) {
+            return true;
+        }
+        for (int i = 1; i != result.size(); i++) {
+            if (result.get(i) <= result.get(i - 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    void mid(List<Integer> path, TreeNode node) {
+        if (node == null) {
+            return;
+        }
+        mid(path, node.left);
+        path.add(node.val);
+        mid(path, node.right);
+    }
+
     static class Node {
         public int val;
         public Node left;
