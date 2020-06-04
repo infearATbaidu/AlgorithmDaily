@@ -413,11 +413,13 @@ public class SortAndIndexSolution {
         }
         int[] leftMax = new int[height.length], rightMax = new int[height.length];
         int lMax = Integer.MIN_VALUE, rMax = Integer.MIN_VALUE;
+        // leftMax[i]表示[0:i]中间的最大值，rightMax[i]表示[i:]中的最大值
         for (int i = 0; i != height.length; i++) {
             lMax = leftMax[i] = Math.max(lMax, height[i]);
             rMax = rightMax[height.length - 1 - i] = Math.max(rMax, height[height.length - 1 - i]);
         }
         int result = 0;
+        // 可以接水的高度由两边的高度最大值中的最小值决定
         for (int i = 1; i < height.length - 1; i++) {
             result += (Math.min(leftMax[i], rightMax[i]) - height[i]);
         }
