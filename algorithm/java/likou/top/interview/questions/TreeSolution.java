@@ -83,16 +83,16 @@ public class TreeSolution {
 
     /*    中序遍历二叉树
         给定一个二叉树，返回它的中序 遍历。
-    
+
         示例:
-    
+
         输入: [1,null,2,3]
                 1
                 \
                 2
                 /
                 3
-    
+
         输出: [1,3,2]
         进阶: 递归算法很简单，你可以通过迭代算法完成吗？*/
     public List<Integer> inorderTraversal(TreeNode root) {
@@ -113,17 +113,17 @@ public class TreeSolution {
 
     /*    二叉树的锯齿形层次遍历
         给定一个二叉树，返回其节点值的锯齿形层次遍历。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
-    
+
         例如：
         给定二叉树 [3,9,20,null,null,15,7],
-    
+
                 3
                 / \
                 9  20
                 /  \
                 15   7
         返回锯齿形层次遍历如下：
-    
+
                 [
                 [3],
                 [20,9],
@@ -165,6 +165,38 @@ public class TreeSolution {
         }
         return r;
 
+    }
+
+    public List<List<Integer>> zigzagLevelOrder2(TreeNode root) {
+        List<List<Integer>> r = new LinkedList();
+        if (root == null) {
+            return r;
+        }
+        LinkedList<TreeNode> cur = new LinkedList();
+        cur.add(root);
+        boolean left = true;
+        while (!cur.isEmpty()) {
+            LinkedList<Integer> tmp = new LinkedList();
+            LinkedList<TreeNode> copy = new LinkedList<>();
+            while (!cur.isEmpty()) {
+                TreeNode top = cur.pop();
+                if (left) {
+                    tmp.add(top.val);
+                } else {
+                    tmp.add(0, top.val);
+                }
+                if (top.left != null) {
+                    copy.add(top.left);
+                }
+                if (top.right != null) {
+                    copy.add(top.right);
+                }
+            }
+            r.add(tmp);
+            cur = copy;
+            left = !left;
+        }
+        return r;
     }
 
     /*    从前序与中序遍历序列构造二叉树
