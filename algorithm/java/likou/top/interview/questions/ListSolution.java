@@ -22,6 +22,45 @@ public class ListSolution {
         return next;
     }
 
+    /*    反转从位置 m 到 n 的链表。请使用一趟扫描完成反转。
+
+        说明:
+                1 ≤ m ≤ n ≤ 链表长度。
+
+        示例:
+
+        输入: 1->2->3->4->5->NULL, m = 2, n = 4
+        输出: 1->4->3->2->5->NULL
+
+        来源：力扣（LeetCode）
+        链接：https://leetcode-cn.com/problems/reverse-linked-list-ii
+        著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。*/
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        int nums = 1;
+        ListNode vHead = new ListNode(), cur = head, pre = vHead;
+        vHead.next = head;
+        while (nums <= n) {
+            if (nums < m) {
+                pre = cur;
+                cur = cur.next;
+                nums++;
+            } else {
+                // 开始翻转，记一下pre，也就是开始翻转前的最后一个节点
+                ListNode end = pre;
+                while (nums <= n) {
+                    ListNode next = cur.next;
+                    cur.next = pre;
+                    pre = cur;
+                    cur = next;
+                    nums++;
+                }
+                end.next.next = cur;
+                end.next = pre;
+            }
+        }
+        return vHead.next;
+    }
+
     public boolean isPalindrome(ListNode head) {
         int i = 0;
         ListNode cur = head;
