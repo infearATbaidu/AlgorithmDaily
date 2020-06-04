@@ -144,10 +144,8 @@ public class BeginningSolution {
             }
             // 没有找到，把nums2中的元素拷贝到nums1的末尾
             if (i == end) {
-                while (i != m + n) {
-                    nums1[i++] = nums2[j++];
-                }
-                break;
+                System.arraycopy(nums2, j, nums1, end, n - j);
+                return;
             }
             // 找到最后一个小于nums1[i]的元素
             int k = j;
