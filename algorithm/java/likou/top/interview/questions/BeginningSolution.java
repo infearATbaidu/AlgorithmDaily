@@ -142,7 +142,7 @@ public class BeginningSolution {
             while (i != end && nums1[i] < nums2[j]) {
                 i++;
             }
-            // 没有找到，把nums[2]中的元素拷贝到nums1的末尾
+            // 没有找到，把nums2中的元素拷贝到nums1的末尾
             if (i == end) {
                 while (i != m + n) {
                     nums1[i++] = nums2[j++];

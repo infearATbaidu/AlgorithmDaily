@@ -402,6 +402,27 @@ public class ListSolution {
         return lists[0];
     }
 
+    // use recursive to implement mergeList
+    public ListNode mergeKLists2(ListNode[] lists) {
+        int l = lists.length;
+        if (l == 0) {
+            return null;
+        }
+        if (l == 1) {
+            return lists[0];
+        }
+        ListNode[] sub = new ListNode[l % 2 == 0 ? l / 2 : l / 2 + 1];
+        int index = 0;
+        for (int i = 0; i < l; i += 2) {
+            if (i != l - 1) {
+                sub[index++] = merge(lists[i], lists[i + 1]);
+            } else {
+                sub[index++] = lists[i];
+            }
+        }
+        return mergeKLists(sub);
+    }
+
     /*    环形链表 II
         给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
 
