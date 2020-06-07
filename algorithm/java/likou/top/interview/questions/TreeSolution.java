@@ -16,7 +16,7 @@ import java.util.Set;
 public class TreeSolution {
 
     public static void main(String args[]) {
-        new TreeSolution().findMinHeightTrees(4, new int[][] {{1, 0}, {1, 2}, {1, 3}});
+        new TreeSolution().buildTree2(new int[] {3, 9, 20, 15, 7}, new int[] {9, 3, 15, 20, 7});
     }
 
     /*    https://leetcode-cn.com/problems/shu-de-zi-jie-gou-lcof/
@@ -141,6 +141,39 @@ public class TreeSolution {
             return root;
         }
         return null;
+    }
+
+    /*    输入某二叉树的前序遍历和中序遍历的结果，请重建该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+        例如，给出
+
+        前序遍历 preorder = [3,9,20,15,7]
+        中序遍历 inorder = [9,3,15,20,7]
+        返回如下的二叉树：
+
+                3
+                / \
+                9  20
+                /  \
+                15   7*/
+    public TreeNode buildTree2(int[] preorder, int[] inorder) {
+        return buildTree2(preorder, 0, inorder, 0, inorder.length);
+    }
+
+    private TreeNode buildTree2(int[] preorder, int s1, int[] inorder, int s2, int length) {
+        if (length == 0) {
+            return null;
+        }
+        int pos = -1;
+        for (int i = s2; i != s2 + length; i++) {
+            if (inorder[i] == preorder[s1]) {
+                pos = i;
+                break;
+            }
+        }
+        TreeNode root = new TreeNode(preorder[s1]);
+        root.left = buildTree2(preorder, s1 + 1, inorder, s2, pos - s2);
+        root.right = buildTree2(preorder, s1 + 1 + pos - s2, inorder, pos + 1, s2 + length - pos - 1);
+        return root;
     }
 
     public int kthSmallest(TreeNode root, int k) {
