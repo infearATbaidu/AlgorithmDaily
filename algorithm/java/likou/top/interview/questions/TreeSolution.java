@@ -465,6 +465,24 @@ public class TreeSolution {
         return isValidBST(root.left, minValue, root.val) && isValidBST(root.right, root.val, maxValue);
     }
 
+    // 不同的二叉搜索树
+    // https://leetcode-cn.com/problems/unique-binary-search-trees/
+    public int numTrees(int n) {
+        if (n < 1) {
+            return 0;
+        }
+        int arr[] = new int[n + 1];
+        arr[0] = 1;
+        for (int i = 1; i <= n; i++) {
+            int sum = 0;
+            for (int j = 0; j != i; j++) {
+                sum += arr[j] * arr[i - 1 - j];
+            }
+            arr[i] = sum;
+        }
+        return arr[n];
+    }
+
     public boolean isValidBST2(TreeNode root) {
         List<Integer> result = new LinkedList();
         mid(result, root);
