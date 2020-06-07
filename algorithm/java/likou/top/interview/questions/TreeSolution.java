@@ -465,6 +465,26 @@ public class TreeSolution {
         return isValidBST(root.left, minValue, root.val) && isValidBST(root.right, root.val, maxValue);
     }
 
+    // 给你一棵二叉搜索树，请你返回一棵 平衡后 的二叉搜索树，新生成的树应该与原来的树有着相同的节点值。
+    // 如果一棵二叉搜索树中，每个节点的两棵子树高度差不超过 1 ，我们就称这棵二叉搜索树是 平衡的 。
+    // 如果有多种构造方法，请你返回任意一种。
+    public TreeNode balanceBST(TreeNode root) {
+        List<Integer> path = new LinkedList<>();
+        mid(path, root);
+        return balanceBST(path, 0, path.size());
+    }
+
+    private TreeNode balanceBST(List<Integer> path, int start, int end) {
+        if (start >= end) {
+            return null;
+        }
+        int mid = (start + end) / 2;
+        TreeNode root = new TreeNode(path.get(mid));
+        root.left = balanceBST(path, start, mid);
+        root.right = balanceBST(path, mid + 1, end);
+        return root;
+    }
+
     // 给定一个单链表，其中的元素按升序排序，将其转换为高度平衡的二叉搜索树。
     // 本题中，一个高度平衡二叉树是指一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1。
     public TreeNode sortedListToBST(ListNode head) {
@@ -486,6 +506,20 @@ public class TreeSolution {
         pre.next = null;
         root.left = sortedListToBST(head);
         root.right = sortedListToBST(h2);
+        return root;
+    }
+
+    // 给定二叉搜索树（BST）的根节点和要插入树中的值，将值插入二叉搜索树。 返回插入后二叉搜索树的根节点。 保证原始二叉搜索树中不存在新值。
+    // 注意，可能存在多种有效的插入方式，只要树在插入后仍保持为二叉搜索树即可。 你可以返回任意有效的结果。
+    public TreeNode insertIntoBST(TreeNode root, int val) {
+        if (root == null) {
+            return new TreeNode(val);
+        }
+        if (val > root.val) {
+            root.right = insertIntoBST(root.right, val);
+        } else {
+            root.left = insertIntoBST(root.left, val);
+        }
         return root;
     }
 
