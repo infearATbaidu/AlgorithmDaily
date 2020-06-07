@@ -1,11 +1,14 @@
 package likou.top.interview.questions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author infear
@@ -13,16 +16,7 @@ import java.util.Map;
 public class TreeSolution {
 
     public static void main(String args[]) {
-        TreeNode t1 = new TreeNode(1);
-        TreeNode t2 = new TreeNode(2);
-        TreeNode t3 = new TreeNode(3);
-        t1.right = t2;
-        t2.left = t3;
-        String ser = Codec.serialize(t1);
-        System.out.println(ser);
-        TreeNode root = Codec.deserialize(ser);
-        ser = Codec.serialize(root);
-        System.out.println(ser);
+        new TreeSolution().findMinHeightTrees(4, new int[][] {{1, 0}, {1, 2}, {1, 3}});
     }
 
     /*    https://leetcode-cn.com/problems/shu-de-zi-jie-gou-lcof/
@@ -64,6 +58,41 @@ public class TreeSolution {
         }
         return contains(a.left, b.left) && contains(a.right, b.right);
 
+    }
+
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        if (edges.length == 0) {
+            return Arrays.asList(0);
+        }
+        Map<Integer, Set<Integer>> edge = new HashMap<>();
+        for (int[] e : edges) {
+            edge.putIfAbsent(e[0], new HashSet());
+            edge.get(e[0]).add(e[1]);
+            edge.putIfAbsent(e[1], new HashSet());
+            edge.get(e[1]).add(e[0]);
+        }
+        Set<Integer> last = new HashSet<>();
+        while (!edge.isEmpty()) {
+            Set<Integer> oneDegree = stats(edge);
+            for (Integer src : oneDegree) {
+                for (Integer dest : edge.getOrDefault(src, new HashSet<>())) {
+                    edge.get(dest).remove(src);
+                }
+                edge.remove(src);
+            }
+            last = oneDegree;
+        }
+        return new LinkedList<>(last);
+    }
+
+    private Set<Integer> stats(Map<Integer, Set<Integer>> edge) {
+        Set<Integer> result = new HashSet<>();
+        for (Integer src : edge.keySet()) {
+            if (edge.get(src).size() <= 1) {
+                result.add(src);
+            }
+        }
+        return result;
     }
 
     public int kthSmallest(TreeNode root, int k) {
