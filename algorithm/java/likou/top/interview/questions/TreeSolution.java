@@ -541,6 +541,110 @@ public class TreeSolution {
         return arr[n];
     }
 
+    /*    给定一个二叉搜索树的根节点 root 和一个值 key，删除二叉搜索树中的 key 对应的节点，并保证二叉搜索树的性质不变。返回二叉搜索树（有可能被更新）的根节点的引用。
+        一般来说，删除节点可分为两个步骤：
+        首先找到需要删除的节点；
+        如果找到了，删除它。*/
+    // 迭代实现
+    public TreeNode deleteNode(TreeNode root, int key) {
+        TreeNode pre = root, cur = root;
+        while (cur != null && cur.val != key) {
+            pre = cur;
+            if (cur.val > key) {
+                cur = cur.left;
+            } else {
+                cur = cur.right;
+            }
+        }
+        if (cur == null) {
+            return root;
+        }
+        TreeNode deleted = deleteNode(cur);
+        if (pre == cur) {
+            return deleted;
+        }
+        if (pre.left == cur) {
+            pre.left = deleted;
+        } else {
+            pre.right = deleted;
+        }
+        return root;
+    }
+
+    private TreeNode deleteNode(TreeNode cur) {
+        if (cur.left == null && cur.right == null) {
+            return null;
+        }
+        // 找到左子树中的最大值
+        if (cur.left != null) {
+            TreeNode left = cur.left, pre = left;
+            while (left.right != null) {
+                pre = left;
+                left = left.right;
+            }
+            cur.val = left.val;
+            if (pre == left) {
+                cur.left = left.left;
+            } else {
+                pre.right = left.left;
+            }
+        } else {
+            TreeNode right = cur.right, pre = right;
+            while (right.left != null) {
+                pre = right;
+                right = right.left;
+            }
+            cur.val = right.val;
+            if (pre == right) {
+                cur.right = right.right;
+            } else {
+                pre.left = right.right;
+            }
+        }
+        return cur;
+    }
+
+    // 删除二叉树节点的递归实现
+    public TreeNode deleteNode2(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val > key) {
+            root.left = deleteNode(root.left, key);
+            return root;
+        } else if (root.val < key) {
+            root.right = deleteNode(root.right, key);
+            return root;
+        }
+        if (root.left == null && root.right == null) {
+            return null;
+        }
+        if (root.left != null) {
+            int max = findMaxInLeft(root.left);
+            root.val = max;
+            root.left = deleteNode(root.left, max);
+        } else {
+            int min = findMinInRight(root.right);
+            root.val = min;
+            root.right = deleteNode(root.right, min);
+        }
+        return root;
+    }
+
+    private int findMinInRight(TreeNode right) {
+        while (right.left != null) {
+            right = right.left;
+        }
+        return right.val;
+    }
+
+    private int findMaxInLeft(TreeNode left) {
+        while (left.right != null) {
+            left = left.right;
+        }
+        return left.val;
+    }
+
     public boolean isValidBST2(TreeNode root) {
         List<Integer> result = new LinkedList();
         mid(result, root);
