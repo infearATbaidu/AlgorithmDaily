@@ -809,4 +809,34 @@ public class TreeSolution {
         return visit(leftChild[root], history, leftChild, rightChild) && visit(rightChild[root], history, leftChild,
                 rightChild);
     }
+
+    // https://leetcode-cn.com/problems/check-completeness-of-a-binary-tree/
+    // 二叉树完全性校验
+    public boolean isCompleteTree(TreeNode root) {
+        List<TreeNode> path = new ArrayList<>();
+        path.add(root);
+        int start = 0;
+        while (start < path.size()) {
+            int end = path.size();
+            int firstNull = -1;
+            for (int i = start; i < end; i++) {
+                if (path.get(i) == null) {
+                    firstNull = i;
+                    break;
+                }
+                path.add(path.get(i).left);
+                path.add(path.get(i).right);
+            }
+            // 当出现null，表示之后都必须是null才是完全二叉树
+            if (firstNull != -1) {
+                for (int i = firstNull; i < path.size(); i++) {
+                    if (path.get(i) != null) {
+                        return false;
+                    }
+                }
+            }
+            start = end;
+        }
+        return true;
+    }
 }
