@@ -756,4 +756,57 @@ public class TreeSolution {
         }
         return checkSub(head.next, root.left) || checkSub(head.next, root.right);
     }
+
+    // 二叉树上有 n 个节点，按从 0 到 n - 1 编号，其中节点 i 的两个子节点分别是 leftChild[i] 和 rightChild[i]。
+    // 只有 所有 节点能够形成且 只 形成 一颗 有效的二叉树时，返回 true；否则返回 false。
+    // 如果节点 i 没有左子节点，那么 leftChild[i] 就等于 -1。右子节点也符合该规则。
+    // 链接：https://leetcode-cn.com/problems/validate-binary-tree-nodes
+    public boolean validateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+        int hasAncestor[] = new int[n];
+        // tag all nodes except root.
+        for (int i = 0; i != n; i++) {
+            if (leftChild[i] != -1) {
+                if (hasAncestor[leftChild[i]] == 1) {
+                    return false;
+                }
+                hasAncestor[leftChild[i]] = 1;
+            }
+            if (rightChild[i] != -1) {
+                if (hasAncestor[rightChild[i]] == 1) {
+                    return false;
+                }
+                hasAncestor[rightChild[i]] = 1;
+            }
+        }
+        // check root count.
+        int root = -1;
+        for (int i = 0; i != n; i++) {
+            if (hasAncestor[i] == 0) {
+                if (root != -1) {
+                    return false;
+                }
+                root = i;
+            }
+        }
+        int history[] = new int[n];
+        visit(root, history, leftChild, rightChild);
+        for (int i = 0; i != n; i++) {
+            if (history[i] == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean visit(int root, int[] history, int[] leftChild, int[] rightChild) {
+        if (root == -1) {
+            return true;
+        }
+        if (history[root] == 1) {
+            return false;
+        }
+        history[root] = 1;
+        return visit(leftChild[root], history, leftChild, rightChild) && visit(rightChild[root], history, leftChild,
+                rightChild);
+    }
 }
