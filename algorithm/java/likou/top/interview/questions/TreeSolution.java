@@ -707,4 +707,53 @@ public class TreeSolution {
         }
         return max;
     }
+
+    // https://leetcode-cn.com/problems/find-bottom-left-tree-value
+    // 找到树左下角的值
+    public int findBottomLeftValue(TreeNode root) {
+        int leftBottom = 0;
+        List<TreeNode> level = new ArrayList<>();
+        int start = 0;
+        level.add(root);
+        while (start < level.size()) {
+            leftBottom = level.get(start).val;
+            int size = level.size();
+            for (int index = start; index != size; index++) {
+                TreeNode cur = level.get(index);
+                if (cur.left != null) {
+                    level.add(cur.left);
+                }
+                if (cur.right != null) {
+                    level.add(cur.right);
+                }
+            }
+            start = size;
+        }
+        return leftBottom;
+    }
+
+    // 二叉树中的列表
+    // https://leetcode-cn.com/problems/linked-list-in-binary-tree/
+    public boolean isSubPath(ListNode head, TreeNode root) {
+        if (head == null) {
+            return true;
+        }
+        if (root == null) {
+            return false;
+        }
+        return checkSub(head, root) || isSubPath(head, root.left) || isSubPath(head, root.right);
+    }
+
+    private boolean checkSub(ListNode head, TreeNode root) {
+        if (head == null) {
+            return true;
+        }
+        if (root == null) {
+            return false;
+        }
+        if (head.val != root.val) {
+            return false;
+        }
+        return checkSub(head.next, root.left) || checkSub(head.next, root.right);
+    }
 }
