@@ -450,6 +450,23 @@ public class ListSolution {
         return slow;
     }
 
+    // https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/
+    // 删除链表的倒数第n个节点
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode vHead = new ListNode();
+        vHead.next = head;
+        ListNode slow = vHead, fast = vHead;
+        while (n-- != 0) {
+            fast = fast.next;
+        }
+        while (fast.next != null) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+        slow.next = slow.next.next;
+        return vHead.next;
+    }
+
     class Node {
         int val;
         Node next;
