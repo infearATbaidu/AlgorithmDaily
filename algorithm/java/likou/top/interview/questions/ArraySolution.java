@@ -604,6 +604,40 @@ solution.shuffle();*/
         return true;
     }
 
+    // 子数组的最小值之和
+    // https://leetcode-cn.com/problems/sum-of-subarray-minimums/
+    public int sumSubarrayMins(int[] A) {
+        if (A == null || A.length == 0) {
+            return 0;
+        }
+        int len = A.length;
+
+        int[] left = new int[len];
+        int[] right = new int[len];
+        LinkedList<Integer> stack = new LinkedList<>();
+        for (int i = 0; i < len; i++) {
+            while (!stack.isEmpty() && A[i] <= A[stack.peek()]) {
+                int poppos = stack.pop();
+                right[poppos] = i - poppos;
+            }
+            if (stack.isEmpty()) {
+                left[i] = i;
+            } else {
+                left[i] = i - stack.peek();
+            }
+            stack.push(i);
+        }
+        while (!stack.isEmpty()) {
+            int pos = stack.pop();
+            right[pos] = len - pos;
+        }
+        long res = 0;
+        for (int i = 0; i < len; i++) {
+            res += A[i] * (left[i]) * (right[i]);
+        }
+        return (int) (res % 1000000007);
+    }
+
     /*
         给你一个整数数组 nums，请你将该数组升序排列。
     */
