@@ -14,7 +14,7 @@ import java.util.Set;
  */
 public class ArraySolution {
     public static void main(String args[]) {
-        System.out.println(new ArraySolution().getPermutation2(3, 6));
+        System.out.println(new ArraySolution().sumSubarrayMins(new int[] {3, 1, 2, 4}));
     }
 
     /*给你一个整数数组 nums ，请你找出数组中乘积最大的连续子数组（该子数组中至少包含一个数字）。
@@ -500,6 +500,25 @@ solution.shuffle();*/
             }
         }
         return r;
+    }
+
+    // 给定一个包含 非负数 的数组和一个目标 整数 k，编写一个函数来判断该数组是否含有连续的子数组，其大小至少为 2，且总和为 k 的倍数，即总和为 n*k，其中 n 也是一个整数。
+    // 链接：https://leetcode-cn.com/problems/continuous-subarray-sum
+    public boolean checkSubarraySum(int[] nums, int k) {
+        for (int i = 0; i < nums.length; i++) {
+            int sum = nums[i];
+            for (int j = i + 1; j < nums.length; j++) {
+                sum += nums[j];
+                if (k == 0) {
+                    if (sum == 0) {
+                        return true;
+                    }
+                } else if (sum % k == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public List<List<Integer>> threeSum2(int[] nums) {
