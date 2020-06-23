@@ -6,6 +6,11 @@ import java.util.HashMap;
  * @author infear
  */
 public class ListSolution {
+    public static void main(String args[]) {
+        ListNode n1 = new ListNode(0, new ListNode(1, new ListNode(1, null)));
+        new ListSolution().oddEvenList(n1);
+    }
+
     public ListNode reverseList(ListNode head) {
         ListNode next = null, cur = head;
         while (cur != null) {
