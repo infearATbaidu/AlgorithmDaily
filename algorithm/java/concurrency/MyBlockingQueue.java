@@ -20,21 +20,6 @@ public class MyBlockingQueue<T> {
         queues = new LinkedList<>();
     }
 
-    public static void main(String args[]) {
-        int outer = 0, inner = 0;
-        for (double longitude = -10; longitude <= 10; longitude += 0.1) {
-            outer++;
-            for (double latitude = -2.5; latitude <= 2.5; latitude += 0.1) {
-                System.out.println("latitude:" + latitude);
-                inner++;
-            }
-            System.out.println("inner:" + inner);
-            inner = 0;
-        }
-        System.out.println("outer:" + outer);
-
-    }
-
     public T take() {
         T result = null;
         lock.lock();
