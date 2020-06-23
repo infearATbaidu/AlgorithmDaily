@@ -88,17 +88,4 @@ public class TreeNode {
         }
         return;
     }
-
-    public static void main(String args[]) {
-        TreeNode root = new TreeNode(3);
-        TreeNode left = new TreeNode(1);
-        TreeNode right = new TreeNode(5);
-        root.left = left;
-        root.right = right;
-        left.left = new TreeNode(0);
-        left.right = new TreeNode(2);
-        right.left = new TreeNode(4);
-        right.right = new TreeNode(6);
-        System.out.print(root.findBottomLeftValue(root));
-    }
 }
