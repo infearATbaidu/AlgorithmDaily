@@ -87,5 +87,6 @@ public class TreeNode {
             genParent(root.right, parents);
         }
         return;
+
     }
 }
